@@ -2,243 +2,2280 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Chùa An Nhiên · Canvas V7 Fixed • UI mới</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Chùa An Nhiên · Tích Công Đức</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{font-family:system-ui,'Segoe UI',sans-serif;color:#f7ecd5}
-*{box-sizing:border-box}
-body{margin:0;background:#102526;overflow:hidden}
-canvas{display:block;width:100vw;height:100dvh;touch-action:manipulation;cursor:pointer}
-button{font:inherit;cursor:pointer}
-#hud{position:fixed;inset:0;pointer-events:none}
-#stats{position:absolute;top:18px;left:20px;display:flex;flex-direction:column;gap:8px;filter:drop-shadow(0 4px 10px #0007)}
-.eyebrow{font-weight:800;font-size:11px;color:#d7c9a0;letter-spacing:3px}
-#count{font-size:clamp(28px,4.3vw,58px);font-weight:900;line-height:1;color:#fff0bd;text-shadow:0 2px 0 #62462d}
-.small{font-size:12px;color:#eee1c3}
-#top{position:absolute;right:20px;top:18px;display:flex;gap:8px}
-.pill{background:#173c38df;border:1px solid #b9a36d88;padding:10px 14px;border-radius:14px;font-weight:700;backdrop-filter:blur(7px);font-size:12px}
-.pill strong{color:#ffdf87;font-size:15px}
-.bottom{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;white-space:nowrap}
-.action{pointer-events:auto;border:1px solid #e8d6a6;background:linear-gradient(#f6e5bc,#cda875);color:#543820;border-radius:16px;padding:12px 22px;font-weight:800;box-shadow:0 5px #7c5132,0 8px 16px #0006}
-.action:active{transform:translateY(3px);box-shadow:0 2px #7c5132}
-.hint{color:#ffe9bb;text-shadow:0 2px 5px #000c;font-size:12px}
-#veil{position:fixed;inset:0;background:#071818aa;display:none;z-index:3}
-#veil.show{display:block}
-#drawer{position:fixed;right:0;top:0;bottom:0;width:min(420px,100vw);background:#f3e8cd;color:#3e402f;z-index:4;transform:translateX(103%);transition:transform .3s cubic-bezier(.2,.9,.3,1);box-shadow:-8px 0 40px #0006;display:flex;flex-direction:column}
-#drawer.show{transform:none}
-.head{background:#31584d;color:#f8e8b7;padding:19px 20px;display:flex;justify-content:space-between;align-items:center}
-.head h2{font-family:Georgia,serif;margin:0;font-size:23px}
-.close{background:#ffffff20;border:1px solid #e3cda3;border-radius:10px;color:white;font-size:23px;width:38px;height:38px}
-#items{overflow-y:auto;padding:16px;flex:1}
-.tabs{display:flex;gap:6px;padding:12px 14px 0;background:#f3e8cd}
-.tab{border:1px solid #cdbb94;background:#f9f2e0;border-radius:11px;padding:9px 12px;color:#675540;font-size:12px;font-weight:750;flex:1}
-.tab.active{background:#31584d;color:white}
-.item{display:flex;gap:13px;align-items:center;background:#fff9ed;border:1px solid #daccab;border-radius:15px;padding:12px;margin-bottom:10px}
-.emoji{width:46px;height:46px;background:#e7dbc1;border-radius:12px;display:grid;place-items:center;font-size:25px}
-.itext{flex:1;min-width:0}.itext b{font-size:14px}.itext small{display:block;color:#86765e;font-size:11px;margin-top:4px;line-height:1.35}
-.buy{border:0;border-radius:10px;background:#38755a;color:white;font-size:12px;font-weight:800;padding:10px}.buy:disabled{background:#bdbaab;color:#f8f6e8;cursor:not-allowed}
-.foot{padding:12px 18px;color:#776e5a;background:#e9ddc3;font-size:11px;line-height:1.5}
-#toast{position:fixed;top:90px;left:50%;transform:translateX(-50%);color:#ffefbe;font-weight:800;text-shadow:0 2px 8px #0009;opacity:0;transition:opacity .2s;pointer-events:none}#toast.on{opacity:1}
-@media(max-width:650px){#top{top:auto;bottom:85px;right:10px}.pill{padding:8px;font-size:10px}#stats{left:12px;top:12px}#count{font-size:30px}.bottom{bottom:17px}.hint{display:none}}
+:root {
+  --gold-primary: #f5d378;
+  --gold-border: #a87842;
+  --panel-bg: rgba(36, 22, 16, 0.94);
+  --btn-bg: #2f1d16;
+  --btn-border: #8e623a;
+  --btn-hover-border: #f0c366;
+  --text-main: #fff6e0;
+  --text-sub: #dfceb2;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #180d18;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--text-main);
+  user-select: none;
+}
+
+canvas#game {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* ==================== TOP MINIMALIST HUD ==================== */
+#hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 22px;
+}
+
+/* Top Left Merit Badge */
+.merit-card {
+  pointer-events: auto;
+  background: var(--panel-bg);
+  border: 2px solid var(--gold-border);
+  border-radius: 16px;
+  padding: 12px 20px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  min-width: 235px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.merit-realm {
+  font-size: 11px;
+  font-weight: 800;
+  color: #f7d885;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.merit-value-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 1px 0 2px;
+}
+
+.merit-star {
+  font-size: 26px;
+  color: #ffde7a;
+  text-shadow: 0 0 12px rgba(255, 222, 122, 0.6);
+  line-height: 1;
+}
+
+.merit-number {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(30px, 3.8vw, 44px);
+  font-weight: 900;
+  color: #fff9eb;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 15px rgba(245,211,120,0.3);
+  letter-spacing: 0.5px;
+}
+
+.cloud-motif {
+  font-size: 18px;
+  color: rgba(245, 211, 120, 0.45);
+  margin-left: auto;
+}
+
+.merit-rates {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-sub);
+  display: flex;
+  gap: 12px;
+}
+
+.merit-rates strong {
+  color: #ffe8a3;
+  font-weight: 800;
+}
+
+/* Top Right Icon Bar */
+.top-actions {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  background: var(--btn-bg);
+  border: 2px solid var(--btn-border);
+  border-radius: 13px;
+  color: #fcefd2;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(.2,.8,.2,1);
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--btn-hover-border);
+  box-shadow: 0 8px 20px rgba(240, 195, 102, 0.3);
+}
+
+.icon-btn:active {
+  transform: translateY(2px);
+}
+
+.icon-btn.shop-btn {
+  background: linear-gradient(145deg, #7c4c1a, #4a290a);
+  border-color: #ffd466;
+  box-shadow: 0 6px 18px rgba(245, 185, 60, 0.45);
+}
+.icon-btn.shop-btn:hover {
+  border-color: #fff0a8;
+  filter: brightness(1.15);
+}
+
+/* ==================== DRAWERS & MODALS ==================== */
+#veil {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 6, 14, 0.72);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#veil.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.side-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(440px, 100vw);
+  background: linear-gradient(180deg, #241612 0%, #170d0b 100%);
+  border-left: 2px solid var(--gold-border);
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.85);
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(105%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-main);
+}
+.side-drawer.show {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding: 20px 22px;
+  background: linear-gradient(135deg, #362017 0%, #1f110c 100%);
+  border-bottom: 2px solid var(--gold-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-title-wrap h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #f7d98b;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.drawer-title-wrap span {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #bfa176;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.btn-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #fdf5e3;
+  font-size: 22px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.tab-nav {
+  display: flex;
+  background: #1b100c;
+  padding: 8px 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 6px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  color: #aa9781;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 12px 6px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tab-btn.active {
+  color: var(--gold-primary);
+  border-bottom-color: var(--gold-primary);
+  background: linear-gradient(180deg, transparent, rgba(245, 211, 120, 0.1));
+}
+
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drawer-content::-webkit-scrollbar { width: 5px; }
+.drawer-content::-webkit-scrollbar-thumb { background: #4a3124; border-radius: 8px; }
+
+/* Shop Items */
+.shop-card {
+  background: linear-gradient(135deg, rgba(46, 30, 22, 0.75), rgba(28, 17, 13, 0.9));
+  border: 1px solid rgba(214, 175, 112, 0.25);
+  border-radius: 15px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all .2s ease;
+}
+
+.shop-card:hover {
+  border-color: rgba(245, 211, 120, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.shop-card.equipped {
+  border-color: #5edb9c;
+  background: linear-gradient(135deg, rgba(26, 44, 32, 0.8), rgba(18, 30, 22, 0.9));
+}
+
+.item-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #38241b, #221510);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-info h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff3d6;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-level-tag {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: rgba(245, 211, 120, 0.2);
+  color: #ffe899;
+}
+
+.item-desc {
+  font-size: 11px;
+  color: #bfb098;
+  line-height: 1.35;
+}
+
+.item-effect {
+  color: #7ce3a9;
+  font-weight: 700;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.btn-buy {
+  background: linear-gradient(180deg, #d8a049 0%, #996822 100%);
+  border: 1px solid #ffd978;
+  color: #fff;
+  border-radius: 11px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  transition: all .2s;
+  flex-shrink: 0;
+}
+
+.btn-buy:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: scale(1.03);
+}
+
+.btn-buy:disabled {
+  background: #3c2a22;
+  border-color: #4a372e;
+  color: #8c786e;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-buy.equipped-btn {
+  background: linear-gradient(180deg, #2b7a54, #1b4e36);
+  border-color: #55d697;
+  color: #d1ffe6;
+}
+
+.drawer-footer {
+  padding: 12px 18px;
+  background: #140b08;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: #9c8e79;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Modals */
+.modal-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.94);
+  width: min(460px, 92vw);
+  background: linear-gradient(180deg, #2a1a15 0%, #180f0c 100%);
+  border: 2px solid var(--gold-border);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+  z-index: 30;
+  padding: 26px 22px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-main);
+}
+.modal-dialog.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.modal-header h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  color: #f7d98b;
+  margin-bottom: 5px;
+}
+.modal-header p {
+  font-size: 12px;
+  color: #bfb098;
+}
+
+.input-box {
+  width: 100%;
+  background: #120b08;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #fff0cf;
+  font-family: monospace;
+  font-size: 11.5px;
+  padding: 10px;
+  resize: vertical;
+  min-height: 75px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.modal-btn {
+  flex: 1;
+  background: #38241c;
+  border: 1px solid var(--gold-border);
+  color: #fcefd2;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  display: grid;
+  place-items: center;
+}
+.modal-btn:hover {
+  background: #4d3327;
+  border-color: #ffd978;
+}
+.modal-btn.primary {
+  background: linear-gradient(180deg, #d8a049 0%, #996822 100%);
+  border-color: #ffd978;
+  color: #fff;
+}
+
+/* Toast */
+#toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-15px);
+  background: rgba(38, 22, 16, 0.95);
+  border: 1px solid #ffd466;
+  border-radius: 18px;
+  padding: 10px 20px;
+  color: #fff2c4;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#toast.on {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 768px) {
+  #hud { padding: 12px 14px; }
+  .merit-card { min-width: auto; padding: 10px 14px; }
+  .merit-number { font-size: 26px; }
+  .merit-rates { font-size: 11px; gap: 8px; }
+  .icon-btn { width: 38px; height: 38px; font-size: 16px; border-radius: 11px; }
+  .top-actions { gap: 6px; }
+}
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Sân chùa và mõ gỗ, nhấn mõ để tích công đức"></canvas>
-<div id="hud">
-  <div id="stats"><div class="eyebrow">☸ CHÙA AN NHIÊN</div><div id="count">✦ 0</div><div class="small" id="rate">+1 / gõ · +0 / giây</div></div>
-  <div id="top"><div class="pill">🪷 Cảnh chùa <strong id="buildnum">0/5</strong></div><div class="pill">☀️ Gõ mõ <strong id="hits">0</strong></div></div>
-  <div class="bottom"><span class="hint">Click vào mõ hoặc nhấn SPACE</span><button id="shop" class="action">☰ Phường công đức</button></div>
-</div>
-<div id="veil"></div>
-<aside id="drawer">
-  <div class="head"><div><div style="font-size:11px;letter-spacing:2px">CỬA HÀNG</div><h2>Phường công đức</h2></div><button id="close" class="close">×</button></div>
-  <div class="tabs"><button class="tab active" data-tab="mõ">Mõ</button><button class="tab" data-tab="cảnh">Cảnh chùa</button><button class="tab" data-tab="trợ">Trợ duyên</button></div>
-  <div id="items"></div>
-  <div class="foot">Mỗi loại mõ mua một lần. Công trình xuất hiện ngay trên Canvas. Mõ gỗ và sân chùa Canvas được thiết kế lại. Tiến độ bản demo lưu trên thiết bị.</div>
-</aside>
-<div id="toast"></div>
-<audio id="sound" preload="auto" src="./mo-go.mp3"></audio>
-<script>
-(()=>{'use strict';
-const cvs=document.getElementById('game'), c=cvs.getContext('2d');
-let W=1200,H=760,sx=1,sy=1,viewX=0,viewY=0,viewScale=1,last=performance.now(),t=0,menu=false,tab='mõ';
-let floaters=[],petals=[],ripples=[],smokes=[],sparkles=[];
-let shake=0,swing=0,impact=0,drumPulse=0;
-const catalog=[
-{id:'m1',cat:'mõ',name:'Mõ gỗ trầm',icon:'🪵',price:75,power:2},
-{id:'m2',cat:'mõ',name:'Mõ đồng cổ',icon:'🔔',price:5000,power:12},
-{id:'m3',cat:'mõ',name:'Mõ ngọc bích',icon:'💎',price:250000,power:100},
-{id:'m4',cat:'mõ',name:'Mõ thiên quang',icon:'✨',price:15000000,power:1500},
-{id:'bamboo',cat:'cảnh',name:'Vườn trúc',icon:'🎋',price:250,rate:1},
-{id:'lotus',cat:'cảnh',name:'Hồ sen',icon:'🪷',price:2200,rate:5},
-{id:'lantern',cat:'cảnh',name:'Đèn lồng',icon:'🏮',price:15000,rate:20},
-{id:'tree',cat:'cảnh',name:'Đào cổ thụ',icon:'🌸',price:145000,rate:75},
-{id:'bell',cat:'cảnh',name:'Tháp chuông',icon:'🛕',price:1500000,rate:400},
-{id:'incense',cat:'trợ',name:'Hương trầm',icon:'🕯️',price:45,rate:1,growth:1.65},
-{id:'prayer',cat:'trợ',name:'Chuỗi hạt',icon:'📿',price:1200,rate:7,growth:1.75},
-{id:'book',cat:'trợ',name:'Kinh thư',icon:'📜',price:28000,rate:45,growth:1.85},
-{id:'aura',cat:'trợ',name:'Ánh phúc',icon:'☀️',price:990000,rate:400,growth:2}
-];
-let state;try{state=JSON.parse(localStorage.getItem('congduc_canvas_demo_v6'))}catch{}
-if(!state||typeof state!=='object')state={score:0,hits:0,owned:{}};
-state.score=Number(state.score)||0; state.hits=Number(state.hits)||0; state.owned=state.owned||{};
-const save=()=>localStorage.setItem('congduc_canvas_demo_v6',JSON.stringify(state));
-const owned=id=>state.owned[id]||0;
-const power=()=>1+catalog.filter(i=>i.cat==='mõ'&&owned(i.id)).reduce((a,i)=>a+i.power,0);
-const rate=()=>catalog.filter(i=>i.rate).reduce((a,i)=>a+i.rate*owned(i.id),0);
-const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+' nghìn tỷ':n>=1e9?(n/1e9).toFixed(2)+' tỷ':n>=1e6?(n/1e6).toFixed(2)+' triệu':Math.floor(n).toLocaleString('vi-VN');
-const price=i=>Math.ceil(i.price*Math.pow(i.growth||1,owned(i.id)));
-function resize(){const d=Math.min(devicePixelRatio||1,2);cvs.width=innerWidth*d;cvs.height=innerHeight*d;let pw=cvs.width,ph=cvs.height;viewScale=Math.min(pw/W,ph/H);viewX=(pw-W*viewScale)/2;viewY=(ph-H*viewScale)/2;c.setTransform(viewScale,0,0,viewScale,viewX,viewY);sx=viewScale;sy=viewScale;} addEventListener('resize',resize); resize();
-function fill(x,y,w,h,col){c.fillStyle=col; c.fillRect(x,y,w,h)}
-function round(x,y,w,h,r,col){c.fillStyle=col; c.beginPath(); c.roundRect(x,y,w,h,r); c.fill()}
-function line(pts,col,w=2){c.beginPath(); c.moveTo(...pts[0]); for(const p of pts.slice(1))c.lineTo(...p); c.strokeStyle=col; c.lineWidth=w; c.stroke()}
-function poly(pts,col){c.beginPath(); c.moveTo(...pts[0]); for(const p of pts.slice(1))c.lineTo(...p); c.closePath(); c.fillStyle=col; c.fill()}
-function ellipse(x,y,rx,ry,col){c.beginPath(); c.ellipse(x,y,rx,ry,0,0,Math.PI*2); c.fillStyle=col; c.fill()}
-function circle(x,y,r,col){ellipse(x,y,r,r,col)}
-function sky(){
- const g=c.createLinearGradient(0,0,0,760);g.addColorStop(0,'#819f9d');g.addColorStop(.6,'#dfd1ad');g.addColorStop(1,'#f4dbac');fill(0,0,1200,760,g);
- let halo=c.createRadialGradient(845,145,4,845,145,370);halo.addColorStop(0,'#fff6d4cc');halo.addColorStop(1,'#fff0bb00');fill(0,0,1200,700,halo);
- // softly separated mountains
- for(let k=0;k<3;k++){
-  c.beginPath();c.moveTo(0,490);c.lineTo(0,265+k*55);
-  for(let x=0;x<=1200;x+=15)c.lineTo(x,278+k*54+25*Math.sin(x*.007+k)+15*Math.sin(x*.019+k*1.9));
-  c.lineTo(1200,490);c.closePath();c.fillStyle=['#a8b6a5','#91a999','#789887'][k];c.fill();
- }
- fill(0,375,1200,120,'#e4d5b044');
-}
-function roof(cx,top,w,h){
- // three layered roofing surfaces
- poly([[cx-w*.48,top+h*.18],[cx-w*.31,top-h*.18],[cx+w*.31,top-h*.18],[cx+w*.48,top+h*.18],[cx+w*.4,top+h*.28],[cx-w*.4,top+h*.28]],'#5e4035');
- poly([[cx-w*.45,top+h*.14],[cx-w*.29,top-h*.13],[cx+w*.29,top-h*.13],[cx+w*.45,top+h*.14],[cx+w*.38,top+h*.20],[cx-w*.38,top+h*.20]],'#a85d42');
- for(let i=0;i<21;i++){let xx=cx-w*.29+i*w*.029;line([[xx,top-h*.13],[cx+(xx-cx)*1.42,top+h*.18]],'#cc8355',1.6)}
- line([[cx-w*.50,top+h*.15],[cx-w*.41,top+h*.17],[cx-w*.32,top-h*.07],[cx+w*.32,top-h*.07],[cx+w*.41,top+h*.17],[cx+w*.50,top+h*.15]],'#e2b46f',5);
-}
-function temple(){
- // darker facade as back layer
- ellipse(600,494,270,30,'#30443965');
- round(382,314,436,170,5,'#d6bd96');
- round(403,331,394,146,3,'#94684c');
- for(let i=0;i<7;i++){let x=424+i*57;round(x,337,15,135,2,'#614638');round(x+3,337,3,134,1,'#b4825e')}
- round(526,345,148,129,3,'#3f3028');
- for(let i=0;i<4;i++){line([[541+i*36,350],[541+i*36,469]],'#987250',3)}
- roof(600,296,520,154);
- round(531,294,138,30,5,'#264942');
- c.fillStyle='#f1d49a';c.textAlign='center';c.font='bold 17px Georgia,serif';c.fillText('CHÙA AN NHIÊN',600,314);
- // steps have genuine projected depth
- for(let i=0;i<5;i++){let y=476+i*13,w=250+i*18;poly([[600-w,y],[600+w,y],[600+w+13,y+12],[600-w-13,y+12]],i%2?'#9f9a81':'#c8b79b');line([[600-w,y],[600+w,y]],'#efe2c5',2)}
- // faint warm center light
- let h=c.createRadialGradient(600,397,5,600,397,145);h.addColorStop(0,'#ffd99344');h.addColorStop(1,'#ffd99300');fill(435,315,330,210,h);
-}
-function tree(x,y,s=1,pink=false){
- c.save();c.translate(x,y);c.scale(s,s);
- ellipse(0,5,62,13,'#32492c48');line([[0,2],[-3,-122],[-25,-147]],'#6b513b',15);line([[-2,-88],[32,-141]],'#6b513b',9);
- for(let i=0;i<11;i++){let a=i*2.4,rr=22+(i%3)*17;circle(Math.cos(a)*rr,-142+Math.sin(a)*rr*.63,27,pink?(i%3?'#e2acaa':'#f2c6bc'):(i%3?'#557f5d':'#6a956a'))}
- c.restore();
-}
-function lanternPost(x,y,s){c.save();c.translate(x,y);c.scale(s,s);ellipse(0,3,20,7,'#263b3050');round(-6,-98,12,100,3,'#6b4b37');poly([[-28,-101],[0,-123],[28,-101]],'#604634');round(-18,-100,36,42,5,'#ac704d');round(-13,-95,26,31,3,'#f5d28a');round(-22,-62,44,7,3,'#594636');c.restore()}
-function lotus(x,y,r){for(let i=0;i<6;i++){let a=i*Math.PI/3;ellipse(x+Math.cos(a)*r*.36,y+Math.sin(a)*r*.25,r*.39,r*.33,'#f4b8b6')}circle(x,y,r*.2,'#efd27a')}
-function pond(x,y){ellipse(x,y,148,42,'#67877c');ellipse(x,y,136,35,'#568d8f');for(let i=0;i<8;i++){let xx=x-107+i*31,yy=y+Math.sin(i*4)*14;ellipse(xx,yy,13,6,'#8cb38a')}for(let i=0;i<4;i++)lotus(x-88+i*59,y+Math.sin(i*3)*12,12)}
-function bamboo(x,y,s){c.save();c.translate(x,y);c.scale(s,s);for(let i=0;i<4;i++){let xx=i*12-23;line([[xx,0],[xx-2,-140]],'#527d54',5);for(let j=0;j<3;j++){let yy=-45-j*32;poly([[xx,yy],[xx-49,yy-21],[xx-6,yy-10]],'#5b8b62');poly([[xx,yy-12],[xx+48,yy-32],[xx+4,yy-18]],'#3e6e54')}}c.restore()}
-function ground(){
- let g=c.createLinearGradient(0,435,0,760);g.addColorStop(0,'#a9ac95');g.addColorStop(1,'#d2c09e');fill(0,440,1200,320,g);
- // paths with edges converging to temple
- poly([[495,477],[705,477],[1000,760],[200,760]],'#686f5f');
- poly([[506,477],[694,477],[955,760],[245,760]],'#c9b99a');
- for(let i=0;i<12;i++){let y=484+(i/12)**1.7*282,half=96+(y-477)*1.25;line([[600-half,y],[600+half,y]],'#a3947a75',1.5)}
- for(let a of [-1,1]){for(let i=0;i<5;i++){let y=494+i*i*13,x=600+a*(170+i*64);ellipse(x,y,8+i*1.1,3,'#efdec59a')}}
- // shaded side planting strips
- poly([[0,450],[420,475],[220,760],[0,760]],'#647b6077');
- poly([[1200,450],[780,475],[980,760],[1200,760]],'#647b6077');
-}
-function drawStriker(){
- const shaft=c.createLinearGradient(0,-9,0,10);shaft.addColorStop(0,'#dfaa76');shaft.addColorStop(1,'#7b4c34');
- round(-6,-7,148,15,7,shaft);
- round(-9,-10,15,21,5,'#a66f47');
- let h=c.createRadialGradient(-28,-12,2,-24,0,29);h.addColorStop(0,'#e4ac6f');h.addColorStop(.65,'#b47b4e');h.addColorStop(1,'#6b3d29');circle(-25,0,27,h);
- ellipse(-33,-12,10,6,'#f4d3a077');
-}
-function drawDrumAndMallet(){
- c.save();c.translate(600,628);
- ellipse(0,124,220,30,'#26322564');
- // low carved platform, not a tall pillar
- poly([[-202,73],[202,73],[187,109],[-187,109]],'#5e3e2c');
- poly([[-209,66],[209,66],[196,84],[-196,84]],'#9c724f');
- // cushion around the base
- ellipse(0,35,167,43,'#772a22');ellipse(0,29,159,37,'#a53d2e');
- c.strokeStyle='#deae71';c.lineWidth=3;c.beginPath();c.ellipse(0,29,145,32,0,0,Math.PI*2);c.stroke();
- for(let i=-1;i<=1;i++){lotus(i*67,35,10)}
- // natural proportion: low, broad wooden fish, hollow slit on upper-right
- c.save();c.translate(0,-22+impact*3);c.scale(1,1-drumPulse*.014);
- ellipse(0,73,138,20,'#40241755');
- let g=c.createLinearGradient(-130,-96,140,94);g.addColorStop(0,'#9a5a32');g.addColorStop(.38,'#d09658');g.addColorStop(.68,'#b97742');g.addColorStop(1,'#74412b');
- c.fillStyle=g;c.beginPath();c.moveTo(-139,38);c.bezierCurveTo(-151,-50,-94,-101,-16,-110);c.bezierCurveTo(82,-123,137,-47,140,34);c.bezierCurveTo(145,100,98,109,0,109);c.bezierCurveTo(-94,109,-140,96,-139,38);c.closePath();c.fill();
- c.strokeStyle='#79452d';c.lineWidth=4;c.stroke();
- // wood grain gentle and purposeful
- c.strokeStyle='#ffe0a53d';c.lineWidth=2;for(let i=0;i<6;i++){let y=-49+i*25;c.beginPath();c.moveTo(-99,y);c.bezierCurveTo(-50,y-10,40,y+8,99,y-4);c.stroke()}
- // compact carved scrolls (not a face)
- c.strokeStyle='#82492b';c.lineCap='round';c.lineWidth=6;
- for(let i=0;i<3;i++){let x=-74+i*69;c.beginPath();c.arc(x,-10+i%2*10,18,Math.PI*.1,Math.PI*1.7);c.stroke()}
- c.strokeStyle='#e7b97c';c.lineWidth=2.5;
- for(let i=0;i<3;i++){let x=-74+i*69;c.beginPath();c.arc(x,-10+i%2*10,18,Math.PI*.5,Math.PI*1.4);c.stroke()}
- // top slot: narrow dark opening with highlighted lip
- c.save();c.translate(69,-54);c.rotate(-.47);ellipse(0,0,35,12,'#ecc18a');ellipse(1,1,31,8,'#371e19');c.restore();
- // lower acoustic opening
- c.beginPath();c.moveTo(-119,68);c.quadraticCurveTo(0,51,119,68);c.quadraticCurveTo(0,85,-119,68);c.fillStyle='#4d2a1b';c.fill();
- c.beginPath();c.moveTo(-111,67);c.quadraticCurveTo(0,56,111,67);c.strokeStyle='#d8a66a';c.lineWidth=3;c.stroke();
- c.restore();
- // mallet rests right when idle; swings INTO the upper-right side
- c.save();c.translate(145,-74);
- const phase=1-swing;
- const angle=swing>0?-.66+Math.sin(Math.min(phase/.55,1)*Math.PI/2)*.82:0.23;
- c.rotate(angle);drawStriker();c.restore();
- if(impact>0){c.beginPath();c.arc(714,550,22+(1-impact)*24,0,Math.PI*2);c.strokeStyle=`rgba(255,222,157,${impact*.8})`;c.lineWidth=3;c.stroke()}
- c.restore();
-}
-function drawScene(dt){
- c.save();c.setTransform(1,0,0,1,0,0);c.fillStyle="#1e3432";c.fillRect(0,0,cvs.width,cvs.height);c.restore();sky();
- tree(84,427,.60);tree(1118,427,.66);
- temple();ground();
- // mid-ground on both sides
- tree(158,564,1.12,owned('tree')>0);tree(1050,563,1.12,owned('tree')>0);
- lanternPost(302,543,1.03);lanternPost(898,543,1.03);
- if(owned('bamboo')){bamboo(315,578,.8);bamboo(900,578,.8)}
- if(owned('lantern')){lanternPost(417,510,.6);lanternPost(783,510,.6)}
- if(owned('lotus')){pond(153,693);pond(1048,693)}
- if(owned('bell')){c.save();c.translate(1000,440);roof(0,-48,240,110);round(-80,-34,160,126,4,'#a7825c');ellipse(0,28,30,38,'#c39a58');c.restore()}
- // framed flowers and near-field stones
- for(let a of [-1,1]){let x=a===-1?75:1125;ellipse(x,738,122,31,'#576c5177');for(let i=0;i<8;i++)lotus(x+(i-4)*20,721+(i%3)*9,7)}
- // ambient floating petals
- for(let p of petals){c.save();c.globalAlpha=.65;c.translate(p.x,p.y);c.rotate(Math.sin(t*.001+p.p));ellipse(0,0,5,2.7,'#efc0b6');c.restore()}
- drawDrumAndMallet();
- for(let f of floaters){c.save();c.globalAlpha=Math.max(0,f.life/900);c.textAlign='center';c.font='bold 22px system-ui';c.shadowColor='#624125';c.shadowBlur=8;c.fillStyle='#fff0b5';c.fillText('+'+fmt(f.n)+' Công Đức',f.x,f.y);c.restore()}
- for(let r of ripples){c.beginPath();c.arc(600,565,r.r,0,Math.PI*2);c.strokeStyle=`rgba(250,225,154,${Math.max(0,r.life/420)*.48})`;c.lineWidth=2.5;c.stroke()}
- for(let s of sparkles){c.save();c.globalAlpha=Math.max(0,s.life/380);ellipse(s.x,s.y,3,2,'#ffe99d');c.restore()}
-}
 
-for(let i=0;i<22;i++) petals.push({x:Math.random()*1200,y:Math.random()*760,v:.35+Math.random()*.7,p:Math.random()*8});
-function updateParticles(dt){
- for(const p of petals){p.x+=(Math.sin(t*.001+p.p)*.55+.35)*dt/16;p.y+=p.v*dt/16;if(p.x>1220)p.x=-20;if(p.y>770)p.y=-10;}
- floaters=floaters.filter(f=>{f.y-=dt*.09;f.life-=dt;return f.life>0});
- ripples=ripples.filter(r=>{r.r+=dt*.16;r.life-=dt;return r.life>0});
- sparkles=sparkles.filter(s=>{s.x+=s.vx*dt/16;s.y+=s.vy*dt/16;s.vy+=.015*dt;s.life-=dt;return s.life>0});
- if(swing>0){const prev=swing;swing=Math.max(0,swing-dt/180);if(prev>.56&&swing<=.56){impact=1;drumPulse=1;for(let i=0;i<8;i++)sparkles.push({x:715,y:550,life:260+Math.random()*120,vx:Math.random()*1.8-.9,vy:-Math.random()*1.8-.6});}}
- impact=Math.max(0,impact-dt/160);drumPulse=Math.max(0,drumPulse-dt/220);shake*=Math.pow(.86,dt/16);
-}
-function render(now){let dt=Math.min(now-last,45); last=now; t=now; updateParticles(dt); drawScene(dt); requestAnimationFrame(render)} requestAnimationFrame(render);
-function refresh(){document.getElementById('count').textContent='✦ '+fmt(state.score); document.getElementById('rate').textContent='+'+fmt(power())+' / gõ · +'+fmt(rate())+' / giây'; document.getElementById('hits').textContent=fmt(state.hits); document.getElementById('buildnum').textContent=catalog.filter(i=>i.cat==='cảnh'&&owned(i.id)).length+'/5'}
-function toast(msg){let el=document.getElementById('toast'); el.textContent=msg; el.classList.add('on'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>el.classList.remove('on'),1400)}
-const soundPool=Array.from({length:6},()=>{const a=new Audio('./mo-go.mp3');a.preload='auto';a.volume=.72;return a});let soundIndex=0;
-function playMo(){const a=soundPool[soundIndex];soundIndex=(soundIndex+1)%soundPool.length;try{a.pause();a.currentTime=0;const promise=a.play();if(promise)promise.catch(()=>{});}catch(e){console.warn('Không phát được âm thanh:',e)}}
-function hit(){state.hits++; let n=power(); state.score+=n; shake=10; swing=1; impact=0; drumPulse=0; floaters.push({x:600+(Math.random()-.5)*120,y:500+Math.random()*36,life:900,n}); ripples.push({r:25,life:420}); playMo(); refresh(); save()}
-function overDrum(x,y){let dx=(x-600)/160, dy=(y-600)/112; return dx*dx+dy*dy<1.3}
-cvs.addEventListener('pointerdown',e=>{if(menu)return; let x=(e.clientX*(cvs.width/innerWidth)-viewX)/viewScale, y=(e.clientY*(cvs.height/innerHeight)-viewY)/viewScale; if(overDrum(x,y)) hit()});
-addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false); if(e.code==='Space'&&!menu&&e.target.tagName!=='BUTTON'){e.preventDefault(); hit()}});
-function toggle(v){menu=v; document.getElementById('veil').classList.toggle('show',v); document.getElementById('drawer').classList.toggle('show',v); if(v)renderItems()}
-document.getElementById('shop').onclick=()=>toggle(true); document.getElementById('close').onclick=()=>toggle(false); document.getElementById('veil').onclick=()=>toggle(false);
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.tab; document.querySelectorAll('.tab').forEach(z=>z.classList.toggle('active',z===b)); renderItems()});
-function renderItems(){let wrap=document.getElementById('items'); wrap.innerHTML=''; catalog.filter(i=>i.cat===tab).forEach(i=>{let single=i.cat!=='trợ',has=owned(i.id)>0,cost=price(i); const div=document.createElement('div'); div.className='item'; let em=document.createElement('div'); em.className='emoji'; em.textContent=i.icon; let info=document.createElement('div'); info.className='itext'; const name=document.createElement('b'); name.textContent=i.name+(has?' · '+(single?'Đã sở hữu':'Cấp '+owned(i.id)):''); const small=document.createElement('small'); small.textContent=(i.power?'+'+fmt(i.power)+' công đức/gõ':'+'+fmt(i.rate)+' công đức/giây')+' · '+(single?'Mua một lần':'Mua nhiều cấp'); info.append(name,small); const btn=document.createElement('button'); btn.className='buy'; btn.disabled=(single&&has)||state.score<cost; btn.textContent=single&&has?'✓ Đã mua':'✦ '+fmt(cost); btn.onclick=()=>{if(state.score<cost||(single&&owned(i.id)))return; state.score-=cost; state.owned[i.id]=owned(i.id)+1; save(); refresh(); renderItems(); toast('Đã nhận '+i.name+'!')}; div.append(em,info,btn); wrap.append(div)})}
-setInterval(()=>{let r=rate(); if(r){state.score+=r/5; refresh(); save()}},200);
-refresh();
+<canvas id="game" aria-label="Sân Chùa An Nhiên và Mõ Gỗ Tích Công Đức"></canvas>
+
+<!-- Top Minimalist HUD (Directly matching Reference Image) -->
+<div id="hud">
+  <!-- Top Left: Merit Card -->
+  <div class="merit-card">
+    <div class="merit-realm">
+      <span>🌼</span> <span id="realmName">KHỞI TÂM CẦU ĐẠO</span>
+    </div>
+    <div class="merit-value-row">
+      <span class="merit-star">✦</span>
+      <span class="merit-number" id="count">0</span>
+      <span class="cloud-motif">☁️</span>
+    </div>
+    <div class="merit-rates">
+      <div>Gõ: <strong id="powerDisplay">+1</strong></div>
+      <div>Tự động: <strong id="rateDisplay">+0/s</strong></div>
+    </div>
+  </div>
+
+  <!-- Top Right: Square Icon Buttons Row -->
+  <div class="top-actions">
+    <button id="btnInfo" class="icon-btn" title="Cài Đặt / Giới Thiệu">🌼</button>
+    <button id="btnOpenShop" class="icon-btn shop-btn" title="Phường Công Đức (Cửa Hàng)">🏪</button>
+    <button id="btnTheme" class="icon-btn" title="Đổi Khung Cảnh (Hoàng Hôn / Dạ Nguyệt / Thanh Thiên)">🌙</button>
+    <button id="btnSound" class="icon-btn" title="Bật/Tắt Âm Thanh"><span id="soundIcon">🔊</span></button>
+    <button id="btnSaveMenu" class="icon-btn" title="Tiến Trình / Lưu Trữ">💾</button>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div id="veil"></div>
+
+<!-- Shop Drawer -->
+<aside id="shopDrawer" class="side-drawer">
+  <div class="drawer-header">
+    <div class="drawer-title-wrap">
+      <span>Chốn Thập Phương</span>
+      <h2>Phường Công Đức</h2>
+    </div>
+    <button id="btnCloseShop" class="btn-close" aria-label="Đóng cửa hàng">×</button>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="mõ"><span>🪵</span> Mõ Gỗ</button>
+    <button class="tab-btn" data-tab="cảnh"><span>🛕</span> Cảnh Chùa</button>
+    <button class="tab-btn" data-tab="trợ"><span>📿</span> Trợ Duyên</button>
+  </div>
+
+  <div id="shopItems" class="drawer-content"></div>
+
+  <div class="drawer-footer">
+    <span>Tiến trình tự động lưu liên tục</span>
+    <span id="statHits">Tổng gõ: 0</span>
+  </div>
+</aside>
+
+<!-- Save & Data Modal -->
+<div id="saveModal" class="modal-dialog">
+  <div class="modal-header">
+    <h3>Quản Lý Tiến Trình</h3>
+    <p>Sao chép mã lưu để chơi trên máy khác hoặc phục hồi</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <textarea id="saveCodeInput" class="input-box" placeholder="Mã lưu tiến trình xuất hiện ở đây..."></textarea>
+    <div class="modal-actions">
+      <button id="btnExportSave" class="modal-btn">📋 Sao Chép Mã</button>
+      <button id="btnImportSave" class="modal-btn primary">📥 Nhập Mã</button>
+    </div>
+    <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:4px 0;">
+    <div style="display:flex;justify-content:space-between;gap:10px;">
+      <button id="btnResetSave" class="modal-btn" style="color:#ff8d8d;">⚠️ Chơi Lại</button>
+      <button id="btnCloseSaveModal" class="modal-btn">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- Welcome / Offline Gain Modal -->
+<div id="offlineModal" class="modal-dialog">
+  <div class="modal-header">
+    <div style="font-size:36px;margin-bottom:6px;">🙏</div>
+    <h3>Đạo Tràng Tự Tích Phúc</h3>
+    <p id="offlineDesc">Trong thời gian bạn vắng mặt, hương khói chùa vẫn được thắp sáng.</p>
+  </div>
+  <div style="text-align:center;">
+    <div style="font-size:12px;color:#bfb098;">Công đức thu hoạch được:</div>
+    <div id="offlineGainText" style="font-family:'Cinzel',serif;font-size:34px;font-weight:900;color:var(--gold-primary);margin:8px 0 16px;">
+      +0
+    </div>
+    <button id="btnClaimOffline" class="modal-btn primary" style="width:100%;">
+      Hoan Hỉ Tiếp Nhận
+    </button>
+  </div>
+</div>
+
+<!-- Info Modal -->
+<div id="infoModal" class="modal-dialog">
+  <div class="modal-header">
+    <div style="font-size:34px;margin-bottom:6px;">🪷</div>
+    <h3>Chùa An Nhiên · Tích Công Đức</h3>
+    <p>Phiên bản đồ họa 2D Premium chuẩn thiền phái Việt Nam</p>
+  </div>
+  <div style="font-size:12.5px;color:#d8cbb6;line-height:1.6;display:flex;flex-direction:column;gap:8px;">
+    <p>• <strong>Gõ mõ:</strong> Chạm trực tiếp vào cái mõ gỗ trên đệm hoặc nhấn <strong>PHÍM CÁCH (Spacebar)</strong>.</p>
+    <p>• <strong>Phường công đức (🏪):</strong> Mua các loại mõ gỗ, tôn tạo cảnh chùa và trợ duyên để tự động tích phúc.</p>
+    <p>• <strong>Khung cảnh (🌙):</strong> Chuyển đổi giữa Hoàng Hôn êm đềm, Đêm Trăng thanh tịnh và Ngày Nắng ấm áp.</p>
+    <p>• Dữ liệu tự động lưu trữ trên trình duyệt của bạn.</p>
+    <button id="btnCloseInfo" class="modal-btn primary" style="margin-top:10px;">Đã Hiểu</button>
+  </div>
+</div>
+
+<!-- Toast Popup -->
+<div id="toast">
+  <span id="toastIcon">✨</span>
+  <span id="toastMsg">Thông báo</span>
+</div>
+
+<!-- Audio Player for original mo-go.mp3 -->
+<audio id="moAudio" preload="auto" src="./mo-go.mp3"></audio>
+
+<script>
+(() => {
+  'use strict';
+
+  // ==========================================
+  // CONFIG & STATE
+  // ==========================================
+  const SAVE_KEY = 'congduc_save_v9';
+  
+  const REALMS = [
+    { min: 0, title: 'KHỞI TÂM CẦU ĐẠO', mult: 1 },
+    { min: 100, title: 'PHÁT NGUYỆN TINH TẤN', mult: 1.05 },
+    { min: 1000, title: 'TÂM HỒN THANH TỊNH', mult: 1.1 },
+    { min: 10000, title: 'GIEO MẦM BỒ ĐỀ', mult: 1.15 },
+    { min: 100000, title: 'PHÁP KHÍ VIÊN MÃN', mult: 1.25 },
+    { min: 1000000, title: 'VẠN DUYÊN HÓA GIẢI', mult: 1.4 },
+    { min: 10000000, title: 'THIỀN QUANG ĐẠI GIÁC', mult: 1.6 },
+    { min: 100000000, title: 'ĐẮC ĐẠO VÔ VI', mult: 2.0 },
+  ];
+
+  const CATALOG = [
+    { id: 'm0', cat: 'mõ', name: 'Mõ Gỗ Mộc', icon: '🪵', desc: 'Mõ gỗ gụ mộc mạc, tạo tiếng gõ thanh tịnh.', price: 0, power: 1, tone: '#c77d3f' },
+    { id: 'm1', cat: 'mõ', name: 'Mõ Trầm Hương', icon: '🍂', desc: 'Gỗ trầm ngàn năm đượm khói hương thanh khiết.', price: 120, power: 5, tone: '#8a4e27' },
+    { id: 'm2', cat: 'mõ', name: 'Mõ Gỗ Hương Đỏ', icon: '🍁', desc: 'Gỗ hương huyết đỏ thắm, bền bỉ ngàn thu.', price: 2800, power: 25, tone: '#ad482d' },
+    { id: 'm3', cat: 'mõ', name: 'Mõ Gỗ Hoàng Đàn', icon: '✨', desc: 'Gỗ quý hoàng gia tỏa hương dịu nhẹ khai tâm.', price: 65000, power: 160, tone: '#e0a448' },
+    { id: 'm4', cat: 'mõ', name: 'Mõ Bồ Đề Cổ Thụ', icon: '🪷', desc: 'Khắc từ gốc bồ đề đắc đạo, phúc lành vô lượng.', price: 1800000, power: 1000, tone: '#c88642' },
+
+    { id: 'lotus_pond', cat: 'cảnh', name: 'Hồ Sen Ngát Hương', icon: '🪷', desc: 'Hoa sen nở rộ, cá koi bơi lội thanh tịnh.', price: 280, rate: 3 },
+    { id: 'cherry_tree', cat: 'cảnh', name: 'Cội Đào Hồng', icon: '🌸', desc: 'Cánh hoa đào hồng bay bồng bềnh trong gió.', price: 1500, rate: 12 },
+    { id: 'stone_lanterns', cat: 'cảnh', name: 'Thạch Đăng Cổ', icon: '🏮', desc: 'Đèn đá tỏa ánh sáng vàng ấm áp soi đường.', price: 7200, rate: 40 },
+    { id: 'bell_tower', cat: 'cảnh', name: 'Tháp Chuông Đồng', icon: '🛕', desc: 'Đại hồng chung ngân vang xua tan phiền não.', price: 42000, rate: 150 },
+    { id: 'main_sanctuary', cat: 'cảnh', name: 'Trang Hoàng Chánh Điện', icon: '🏛️', desc: 'Đèn lồng vàng và hoành phi thếp vàng lộng lẫy.', price: 280000, rate: 600 },
+
+    { id: 'incense', cat: 'trợ', name: 'Hương Trầm Nghi Ngút', icon: '🕯️', desc: 'Làn khói thơm lan tỏa khắp chánh điện.', price: 25, rate: 1, growth: 1.38 },
+    { id: 'prayer_beads', cat: 'trợ', name: 'Chuỗi Hạt Bồ Đề', icon: '📿', desc: 'Tràng hạt 108 viên giúp định tâm niệm Phật.', price: 350, rate: 5, growth: 1.42 },
+    { id: 'scriptures', cat: 'trợ', name: 'Bát Nhã Tâm Kinh', icon: '📜', desc: 'Lời kinh vi diệu khai mở trí huệ quang minh.', price: 3900, rate: 28, growth: 1.48 },
+    { id: 'holy_light', cat: 'trợ', name: 'Phúc Khí Chiếu Diệu', icon: '☀️', desc: 'Ánh sáng phúc lành bảo bọc muôn loài.', price: 52000, rate: 200, growth: 1.55 }
+  ];
+
+  let state = {
+    score: 0,
+    hits: 0,
+    equippedMo: 'm0',
+    owned: { 'm0': 1 },
+    lastTimestamp: Date.now(),
+    soundEnabled: true,
+    theme: 'dusk'
+  };
+
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        state = { ...state, ...parsed };
+      }
+    }
+  } catch (err) {}
+
+  state.owned['m0'] = 1;
+  if (!state.equippedMo) state.equippedMo = 'm0';
+
+  const save = () => {
+    state.lastTimestamp = Date.now();
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  };
+
+  const owned = id => state.owned[id] || 0;
+  
+  const getRealm = () => {
+    let current = REALMS[0];
+    for (const r of REALMS) {
+      if (state.score >= r.min) current = r;
+      else break;
+    }
+    return current;
+  };
+
+  const currentPower = () => {
+    let p = 1;
+    const current = CATALOG.find(i => i.id === state.equippedMo);
+    if (current && current.power) p = current.power;
+    CATALOG.filter(i => i.cat === 'mõ' && i.id !== state.equippedMo && owned(i.id)).forEach(i => {
+      p += Math.floor(i.power * 0.15);
+    });
+    return Math.max(1, Math.floor(p * getRealm().mult));
+  };
+
+  const currentRate = () => {
+    let r = 0;
+    CATALOG.filter(i => i.rate).forEach(i => {
+      r += i.rate * owned(i.id);
+    });
+    return Math.floor(r * getRealm().mult);
+  };
+
+  const getItemPrice = item => {
+    if (item.cat === 'mõ') return item.price;
+    if (item.cat === 'cảnh') return item.price;
+    const count = owned(item.id);
+    return Math.ceil(item.price * Math.pow(item.growth || 1.38, count));
+  };
+
+  const formatNumber = num => {
+    if (num >= 1e12) return (num / 1e12).toFixed(2) + ' nghìn tỷ';
+    if (num >= 1e9) return (num / 1e9).toFixed(2) + ' tỷ';
+    if (num >= 1e6) return (num / 1e6).toFixed(2) + ' triệu';
+    if (num >= 1e4) return (num / 1e3).toFixed(1) + ' k';
+    return Math.floor(num).toLocaleString('vi-VN');
+  };
+
+  // ==========================================
+  // AUDIO ENGINE
+  // ==========================================
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const audioPool = Array.from({ length: 6 }, () => {
+    const a = new Audio('./mo-go.mp3');
+    a.preload = 'auto';
+    a.volume = 0.85;
+    return a;
+  });
+  let poolIdx = 0;
+
+  function playMoSound() {
+    if (!state.soundEnabled) return;
+    try {
+      const a = audioPool[poolIdx];
+      poolIdx = (poolIdx + 1) % audioPool.length;
+      a.pause();
+      a.currentTime = 0;
+      const p = a.play();
+      if (p) p.catch(() => {});
+    } catch {}
+  }
+
+  function playBellChime(freq = 528, duration = 3) {
+    if (!state.soundEnabled) return;
+    try {
+      if (audioContext.state === 'suspended') audioContext.resume();
+      const osc = audioContext.createOscillator();
+      const oscOvertone = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+      oscOvertone.type = 'sine';
+      oscOvertone.frequency.setValueAtTime(freq * 2.756, audioContext.currentTime);
+
+      const now = audioContext.currentTime;
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.25, now + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(gain);
+      oscOvertone.connect(gain);
+      gain.connect(audioContext.destination);
+
+      osc.start(now);
+      oscOvertone.start(now);
+      osc.stop(now + duration);
+      oscOvertone.stop(now + duration);
+    } catch {}
+  }
+
+  // ==========================================
+  // CANVAS ENGINE (Full Cover Responsive Scaling)
+  // ==========================================
+  const cvs = document.getElementById('game');
+  const ctx = cvs.getContext('2d');
+  
+  const V_W = 1600;
+  const V_H = 900;
+  let scale = 1;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  function handleResize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cvs.width = window.innerWidth * dpr;
+    cvs.height = window.innerHeight * dpr;
+
+    scale = Math.max(cvs.width / V_W, cvs.height / V_H);
+    offsetX = (cvs.width - V_W * scale) / 2;
+    offsetY = (cvs.height - V_H * scale) / 2;
+  }
+  window.addEventListener('resize', handleResize);
+  handleResize();
+
+  let lastTime = performance.now();
+  let timeNow = 0;
+
+  let swingProgress = 0;
+  let isSwinging = false;
+  let drumCompression = 0;
+  let shockwave = null;
+  let sparks = [];
+  let floaters = [];
+  let petals = [];
+
+  for (let i = 0; i < 24; i++) {
+    petals.push({
+      x: Math.random() * V_W,
+      y: Math.random() * V_H,
+      size: 5 + Math.random() * 4,
+      speedX: 0.35 + Math.random() * 0.7,
+      speedY: 0.5 + Math.random() * 0.8,
+      angle: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.03,
+      color: Math.random() > 0.35 ? '#fca5ba' : '#fdd1de'
+    });
+  }
+
+  // ==========================================
+  // 1. SKY & MOUNTAINS
+  // ==========================================
+  function drawSkyAndMountains(theme) {
+    let skyTop = '#381c3c';
+    let skyMid = '#7a2f4c';
+    let skyLow = '#cc5f54';
+    let skyHorizon = '#faa973';
+    let mountainCol1 = '#4e2d4e';
+    let mountainCol2 = '#6e3964';
+
+    if (theme === 'night') {
+      skyTop = '#0a0d1c';
+      skyMid = '#151d33';
+      skyLow = '#202f4a';
+      skyHorizon = '#324a68';
+      mountainCol1 = '#121c29';
+      mountainCol2 = '#1a283b';
+    } else if (theme === 'day') {
+      skyTop = '#4c7b9e';
+      skyMid = '#8fb2c4';
+      skyLow = '#e8d2a7';
+      skyHorizon = '#faeecd';
+      mountainCol1 = '#576c78';
+      mountainCol2 = '#698391';
+    }
+
+    // Fill beyond V_W and V_H to guarantee 100% full coverage
+    const minX = -offsetX / scale - 100;
+    const maxX = (cvs.width - offsetX) / scale + 100;
+    const minY = -offsetY / scale - 100;
+
+    const skyGrad = ctx.createLinearGradient(0, minY, 0, 520);
+    skyGrad.addColorStop(0, skyTop);
+    skyGrad.addColorStop(0.55, skyMid);
+    skyGrad.addColorStop(0.85, skyLow);
+    skyGrad.addColorStop(1, skyHorizon);
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(minX, minY, maxX - minX, 540 - minY);
+
+    const glowGrad = ctx.createRadialGradient(800, 360, 20, 800, 360, 520);
+    glowGrad.addColorStop(0, 'rgba(255, 225, 150, 0.45)');
+    glowGrad.addColorStop(0.5, 'rgba(255, 170, 90, 0.2)');
+    glowGrad.addColorStop(1, 'rgba(255, 150, 80, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.fillRect(minX, minY, maxX - minX, 600 - minY);
+
+    ctx.fillStyle = mountainCol1;
+    ctx.beginPath();
+    ctx.moveTo(minX, 520);
+    ctx.lineTo(minX, 310);
+    ctx.bezierCurveTo(240, 270, 450, 330, 680, 270);
+    ctx.bezierCurveTo(920, 210, 1150, 300, 1380, 250);
+    ctx.lineTo(maxX, 280);
+    ctx.lineTo(maxX, 520);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = mountainCol2;
+    ctx.beginPath();
+    ctx.moveTo(minX, 520);
+    ctx.lineTo(minX, 340);
+    ctx.bezierCurveTo(200, 310, 380, 350, 550, 320);
+    ctx.bezierCurveTo(750, 290, 950, 330, 1200, 300);
+    ctx.bezierCurveTo(1380, 280, 1500, 320, maxX, 310);
+    ctx.lineTo(maxX, 520);
+    ctx.closePath();
+    ctx.fill();
+
+    const mist = ctx.createLinearGradient(0, 380, 0, 490);
+    mist.addColorStop(0, 'rgba(255, 230, 200, 0)');
+    mist.addColorStop(0.7, 'rgba(255, 215, 170, 0.22)');
+    mist.addColorStop(1, 'rgba(255, 215, 170, 0)');
+    ctx.fillStyle = mist;
+    ctx.fillRect(minX, 380, maxX - minX, 110);
+  }
+
+  // ==========================================
+  // 2. COURTYARD STONE FLOOR
+  // ==========================================
+  function drawCourtyardFloor() {
+    const minX = -offsetX / scale - 100;
+    const maxX = (cvs.width - offsetX) / scale + 100;
+    const maxY = (cvs.height - offsetY) / scale + 100;
+
+    const floorGrad = ctx.createLinearGradient(0, 520, 0, maxY);
+    floorGrad.addColorStop(0, '#53444f');
+    floorGrad.addColorStop(0.5, '#6a5665');
+    floorGrad.addColorStop(1, '#7e6475');
+    ctx.fillStyle = floorGrad;
+    ctx.fillRect(minX, 520, maxX - minX, maxY - 520);
+
+    ctx.strokeStyle = 'rgba(40, 25, 35, 0.45)';
+    ctx.lineWidth = 2.5;
+
+    const vX = 800;
+    const vY = 500;
+    const bottomSpans = [-1200, -900, -620, -380, -140, 100, 340, 580, 800, 1020, 1260, 1500, 1740, 1980, 2220, 2500, 2800];
+    for (const bx of bottomSpans) {
+      ctx.beginPath();
+      const t = (520 - vY) / (V_H - vY);
+      const topX = vX + (bx - vX) * t;
+      ctx.moveTo(topX, 520);
+      ctx.lineTo(bx, maxY);
+      ctx.stroke();
+    }
+
+    for (let i = 0; i < 11; i++) {
+      const p = Math.pow(i / 10, 1.7);
+      const y = 525 + p * (maxY - 525);
+      ctx.strokeStyle = 'rgba(45, 30, 40, 0.5)';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(minX, y);
+      ctx.lineTo(maxX, y);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(255, 230, 210, 0.12)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(minX, y - 1.5);
+      ctx.lineTo(maxX, y - 1.5);
+      ctx.stroke();
+    }
+  }
+
+  // ==========================================
+  // 3. MAIN TEMPLE ARCHITECTURE
+  // ==========================================
+  function drawMainTemple() {
+    const cx = 800;
+
+    // Stone Terrace Platform
+    ctx.fillStyle = '#7a6a75';
+    ctx.beginPath();
+    ctx.roundRect(470, 430, 660, 50, 4);
+    ctx.fill();
+
+    // Central Stone Staircase
+    for (let s = 0; s < 6; s++) {
+      const sy = 475 + s * 13;
+      const sw = 330 + s * 32;
+      ctx.fillStyle = s % 2 === 0 ? '#9b8b93' : '#887983';
+      ctx.beginPath();
+      ctx.roundRect(cx - sw / 2, sy, sw, 14, 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+      ctx.fillRect(cx - sw / 2, sy, sw, 2);
+    }
+
+    // Balustrades
+    ctx.fillStyle = '#6f5e6a';
+    ctx.beginPath();
+    ctx.moveTo(cx - 170, 470);
+    ctx.lineTo(cx - 270, 555);
+    ctx.lineTo(cx - 250, 555);
+    ctx.lineTo(cx - 150, 470);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(cx + 170, 470);
+    ctx.lineTo(cx + 270, 555);
+    ctx.lineTo(cx + 250, 555);
+    ctx.lineTo(cx + 150, 470);
+    ctx.closePath();
+    ctx.fill();
+
+    // Upper Sanctuary Hall Wall (Seamless connection between upper and lower roof)
+    const upperWallGrad = ctx.createLinearGradient(cx, 160, cx, 280);
+    upperWallGrad.addColorStop(0, '#5e2517');
+    upperWallGrad.addColorStop(1, '#3b160e');
+    ctx.fillStyle = upperWallGrad;
+    ctx.fillRect(cx - 190, 160, 380, 120);
+
+    // Temple Porch Hall
+    const porchGrad = ctx.createLinearGradient(cx, 280, cx, 440);
+    porchGrad.addColorStop(0, '#542618');
+    porchGrad.addColorStop(1, '#2c140d');
+    ctx.fillStyle = porchGrad;
+    ctx.fillRect(cx - 240, 280, 480, 160);
+
+    // Front Doors
+    ctx.fillStyle = '#1c0c08';
+    ctx.fillRect(cx - 55, 310, 110, 128);
+    // Gold door frame and plaque
+    ctx.fillStyle = '#dca644';
+    ctx.fillRect(cx - 62, 290, 124, 18);
+    ctx.strokeStyle = '#f8df8d';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 62, 290, 124, 18);
+
+    // 4 Wooden Lacquered Pillars
+    const pillarPositions = [cx - 210, cx - 100, cx + 100, cx + 210];
+    for (const px of pillarPositions) {
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.fillRect(px + 12, 280, 6, 160);
+
+      const pilGrad = ctx.createLinearGradient(px, 0, px + 14, 0);
+      pilGrad.addColorStop(0, '#8c2c19');
+      pilGrad.addColorStop(0.4, '#c24b2b');
+      pilGrad.addColorStop(1, '#5e1b0e');
+      ctx.fillStyle = pilGrad;
+      ctx.fillRect(px, 280, 14, 160);
+
+      ctx.fillStyle = '#e8b855';
+      ctx.fillRect(px - 2, 284, 18, 5);
+      ctx.fillRect(px - 2, 430, 18, 6);
+    }
+
+    // 2 Hanging Round Paper Lanterns
+    const lanternX = [cx - 155, cx + 155];
+    for (const lx of lanternX) {
+      ctx.strokeStyle = '#c48e3d';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(lx, 280);
+      ctx.lineTo(lx, 310);
+      ctx.stroke();
+
+      const glow = ctx.createRadialGradient(lx, 335, 4, lx, 335, 45);
+      glow.addColorStop(0, 'rgba(255, 235, 140, 0.9)');
+      glow.addColorStop(0.45, 'rgba(255, 165, 45, 0.5)');
+      glow.addColorStop(1, 'rgba(255, 120, 20, 0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(lx, 335, 45, 0, Math.PI * 2);
+      ctx.fill();
+
+      const lg = ctx.createRadialGradient(lx - 4, 330, 2, lx, 335, 20);
+      lg.addColorStop(0, '#fff4b8');
+      lg.addColorStop(0.5, '#f59a2c');
+      lg.addColorStop(1, '#b54e12');
+      ctx.fillStyle = lg;
+      ctx.beginPath();
+      ctx.ellipse(lx, 335, 19, 23, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#dca644';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(lx, 358);
+      ctx.lineTo(lx, 375);
+      ctx.stroke();
+    }
+
+    // Lower Curved Roof Tier
+    drawCurvedTileRoof(cx, 275, 760, 95, '#a43622', '#ebad47');
+
+    // Upper Curved Roof Tier
+    drawCurvedTileRoof(cx, 165, 520, 85, '#8c2c19', '#e5a53e');
+
+    // Golden Lotus Finial Spire
+    drawGoldenLotusFinial(cx, 90);
+  }
+
+  function drawCurvedTileRoof(cx, topY, width, height, tileColor, ridgeColor) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(20, 5, 5, 0.45)';
+    ctx.beginPath();
+    ctx.ellipse(cx, topY + height * 0.44, width * 0.45, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(cx - width * 0.52, topY + height * 0.35);
+    ctx.quadraticCurveTo(cx - width * 0.25, topY - height * 0.1, cx, topY - height * 0.15);
+    ctx.quadraticCurveTo(cx + width * 0.25, topY - height * 0.1, cx + width * 0.52, topY + height * 0.35);
+    ctx.quadraticCurveTo(cx, topY + height * 0.65, cx - width * 0.52, topY + height * 0.35);
+    ctx.closePath();
+    ctx.fillStyle = tileColor;
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.28)';
+    ctx.lineWidth = 2.5;
+    for (let i = -16; i <= 16; i++) {
+      const offset = (i / 17) * (width * 0.41);
+      ctx.beginPath();
+      ctx.moveTo(cx + offset * 0.68, topY - height * 0.08);
+      ctx.lineTo(cx + offset * 1.25, topY + height * 0.42);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = ridgeColor;
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - width * 0.54, topY + height * 0.22);
+    ctx.quadraticCurveTo(cx - width * 0.25, topY - height * 0.12, cx, topY - height * 0.16);
+    ctx.quadraticCurveTo(cx + width * 0.25, topY - height * 0.12, cx + width * 0.54, topY + height * 0.22);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawGoldenLotusFinial(cx, y) {
+    ctx.save();
+    ctx.fillStyle = '#f7d066';
+    ctx.beginPath();
+    ctx.ellipse(cx, y - 8, 11, 20, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(cx - 13, y - 3, 9, 15, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + 13, y - 3, 9, 15, 0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#caa046';
+    ctx.beginPath();
+    ctx.roundRect(cx - 22, y + 8, 44, 8, 3);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ==========================================
+  // 4. STONE LANTERNS
+  // ==========================================
+  function drawStoneLantern(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    ctx.fillStyle = '#655762';
+    ctx.beginPath();
+    ctx.roundRect(-24, 0, 48, 14, 3);
+    ctx.fill();
+    ctx.fillStyle = '#7a6a77';
+    ctx.fillRect(-10, -50, 20, 50);
+
+    ctx.fillStyle = '#5c4e5a';
+    ctx.beginPath();
+    ctx.roundRect(-26, -60, 52, 10, 2);
+    ctx.fill();
+
+    const glow = ctx.createRadialGradient(0, -80, 2, 0, -80, 42);
+    glow.addColorStop(0, 'rgba(255, 235, 140, 0.95)');
+    glow.addColorStop(0.4, 'rgba(255, 175, 50, 0.6)');
+    glow.addColorStop(1, 'rgba(255, 140, 20, 0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(0, -80, 42, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#ffe994';
+    ctx.fillRect(-16, -95, 32, 34);
+
+    ctx.fillStyle = '#4e414c';
+    ctx.fillRect(-18, -98, 36, 4);
+    ctx.fillRect(-18, -65, 36, 4);
+    ctx.fillRect(-18, -98, 4, 35);
+    ctx.fillRect(14, -98, 4, 35);
+
+    ctx.fillStyle = '#736370';
+    ctx.beginPath();
+    ctx.moveTo(-36, -98);
+    ctx.lineTo(0, -122);
+    ctx.lineTo(36, -98);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#9b8b97';
+    ctx.beginPath();
+    ctx.arc(0, -126, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // ==========================================
+  // 5. BELL PAVILION
+  // ==========================================
+  function drawBellPavilion(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    ctx.fillStyle = '#4a2618';
+    ctx.beginPath();
+    ctx.roundRect(-45, 0, 90, 14, 3);
+    ctx.fill();
+
+    ctx.fillStyle = '#8c2c19';
+    ctx.fillRect(-38, -125, 10, 125);
+    ctx.fillRect(28, -125, 10, 125);
+
+    ctx.fillStyle = '#5c1b0e';
+    ctx.fillRect(-45, -125, 90, 12);
+
+    const bellGrad = ctx.createLinearGradient(-22, -100, 22, -60);
+    bellGrad.addColorStop(0, '#f2ca6b');
+    bellGrad.addColorStop(0.5, '#c79632');
+    bellGrad.addColorStop(1, '#66450f');
+    ctx.fillStyle = bellGrad;
+
+    ctx.beginPath();
+    ctx.moveTo(-16, -112);
+    ctx.quadraticCurveTo(-24, -80, -26, -62);
+    ctx.lineTo(26, -62);
+    ctx.quadraticCurveTo(24, -80, 16, -112);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#deb04e';
+    ctx.fillRect(-28, -63, 56, 5);
+    ctx.fillStyle = '#8a621e';
+    ctx.beginPath();
+    ctx.arc(0, -56, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    drawCurvedTileRoof(0, -125, 170, 55, '#9c3422', '#e5a53e');
+    drawGoldenLotusFinial(0, -170);
+
+    ctx.restore();
+  }
+
+  // ==========================================
+  // 6. CHERRY BLOSSOM TREE & BUSHES
+  // ==========================================
+  function drawCherryBlossomTree() {
+    ctx.save();
+    ctx.strokeStyle = '#38201b';
+    ctx.lineCap = 'round';
+
+    ctx.lineWidth = 18;
+    ctx.beginPath();
+    ctx.moveTo(0, 80);
+    ctx.bezierCurveTo(80, 140, 140, 180, 260, 130);
+    ctx.stroke();
+
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(150, 160);
+    ctx.bezierCurveTo(210, 220, 280, 250, 360, 210);
+    ctx.stroke();
+
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(0, 300);
+    ctx.bezierCurveTo(60, 270, 110, 290, 180, 260);
+    ctx.stroke();
+
+    const flowerClusters = [
+      { x: 190, y: 130, s: 1.1 }, { x: 235, y: 110, s: 1.25 }, { x: 275, y: 140, s: 1.0 },
+      { x: 310, y: 115, s: 0.9 }, { x: 340, y: 180, s: 1.15 }, { x: 375, y: 220, s: 1.05 },
+      { x: 260, y: 220, s: 1.1 }, { x: 160, y: 260, s: 1.2 }, { x: 110, y: 280, s: 0.95 },
+      { x: 75, y: 145, s: 1.0 }, { x: 135, y: 185, s: 1.3 }, { x: 390, y: 170, s: 0.85 }
+    ];
+
+    for (const fc of flowerClusters) {
+      drawSingleSakuraFlower(fc.x, fc.y, fc.s);
+    }
+
+    drawGardenBushes(120, 560, '#4e6d32', '#c9962a');
+    ctx.restore();
+  }
+
+  function drawSingleSakuraFlower(x, y, scale = 1) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    for (let p = 0; p < 5; p++) {
+      const angle = (p * Math.PI * 2) / 5;
+      ctx.save();
+      ctx.rotate(angle);
+
+      const petGrad = ctx.createRadialGradient(0, 10, 1, 0, 10, 16);
+      petGrad.addColorStop(0, '#fca2b6');
+      petGrad.addColorStop(0.6, '#fcb8c7');
+      petGrad.addColorStop(1, '#ffe3ea');
+      ctx.fillStyle = petGrad;
+
+      ctx.beginPath();
+      ctx.ellipse(0, 11, 7.5, 11, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#b52458';
+      ctx.fillRect(-1, 20, 2, 2);
+
+      ctx.restore();
+    }
+
+    ctx.fillStyle = '#a61b4d';
+    ctx.beginPath();
+    ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#ffdf6b';
+    for (let s = 0; s < 5; s++) {
+      const a = (s * Math.PI * 2) / 5 + 0.3;
+      ctx.beginPath();
+      ctx.arc(Math.cos(a) * 4, Math.sin(a) * 4, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawGardenBushes(x, y, col1, col2) {
+    ctx.fillStyle = col1;
+    ctx.beginPath();
+    ctx.arc(x - 50, y, 45, 0, Math.PI * 2);
+    ctx.arc(x, y - 20, 55, 0, Math.PI * 2);
+    ctx.arc(x + 50, y - 5, 40, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = col2;
+    ctx.beginPath();
+    ctx.arc(x + 25, y - 30, 25, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // ==========================================
+  // 7. LOTUS POND
+  // ==========================================
+  function drawLotusPond() {
+    ctx.save();
+    const px = 1440;
+    const py = 810;
+
+    ctx.fillStyle = '#5c4e5a';
+    ctx.beginPath();
+    ctx.ellipse(px, py, 190, 75, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+
+    const waterGrad = ctx.createRadialGradient(px, py - 5, 10, px, py, 170);
+    waterGrad.addColorStop(0, '#3f6866');
+    waterGrad.addColorStop(0.65, '#204646');
+    waterGrad.addColorStop(1, '#11292b');
+    ctx.fillStyle = waterGrad;
+    ctx.beginPath();
+    ctx.ellipse(px, py, 175, 62, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+
+    const pads = [
+      { x: px - 85, y: py - 10, r: 24 },
+      { x: px - 35, y: py + 18, r: 28 },
+      { x: px + 40, y: py + 5, r: 26 },
+      { x: px + 95, y: py - 12, r: 22 }
+    ];
+    for (const pad of pads) {
+      ctx.fillStyle = '#487c4f';
+      ctx.beginPath();
+      ctx.ellipse(pad.x, pad.y, pad.r, pad.r * 0.55, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#204646';
+      ctx.beginPath();
+      ctx.moveTo(pad.x, pad.y);
+      ctx.lineTo(pad.x + pad.r, pad.y);
+      ctx.stroke();
+    }
+
+    drawSingleLotus(px - 60, py - 20, 1.15);
+    drawSingleLotus(px + 65, py - 15, 1.25);
+    drawSingleLotus(px + 120, py + 10, 0.95);
+
+    drawGardenBushes(1240, 560, '#4e6d32', '#cf9a32');
+    ctx.restore();
+  }
+
+  function drawSingleLotus(x, y, scale = 1) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    const petalAngles = [-0.65, -0.35, 0, 0.35, 0.65];
+    for (const a of petalAngles) {
+      ctx.save();
+      ctx.rotate(a);
+
+      const petGrad = ctx.createLinearGradient(0, 0, 0, -22);
+      petGrad.addColorStop(0, '#fca2bc');
+      petGrad.addColorStop(0.7, '#ffccd9');
+      petGrad.addColorStop(1, '#ffffff');
+      ctx.fillStyle = petGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(-6, -12, 0, -22);
+      ctx.quadraticCurveTo(6, -12, 0, 0);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    ctx.fillStyle = '#f7d057';
+    ctx.beginPath();
+    ctx.ellipse(0, -3, 6, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // ==========================================
+  // 8. THE MASTERPIECE: MÕ GỖ & CUSHION & MALLET (ASSETS)
+  // ==========================================
+  const moImg = new Image();
+  let moLoaded = false;
+  moImg.onload = () => { moLoaded = true; };
+  moImg.src = './01-mo-go.png';
+
+  const demImg = new Image();
+  let demLoaded = false;
+  demImg.onload = () => { demLoaded = true; };
+  demImg.src = './02-dem-mo.png';
+
+  const duiImg = new Image();
+  let duiLoaded = false;
+  duiImg.onload = () => { duiLoaded = true; };
+  duiImg.src = './03-dui-go.png';
+
+  function drawMõAndCushion() {
+    ctx.save();
+
+    if (demLoaded && moLoaded) {
+      const cx = 770;
+      const cy = 740;
+
+      // 8.1 Ground Contact Shadow under Cushion
+      ctx.fillStyle = 'rgba(18, 9, 12, 0.58)';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + 85, 185, 32, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 8.2 The Red Lotus Cushion (02-dem-mo.png) - Compact Elegant Size
+      ctx.save();
+      ctx.translate(cx, cy);
+      const demScale = 0.46;
+      ctx.scale((1 + drumCompression * 0.015) * demScale, (1 - drumCompression * 0.025) * demScale);
+      // In 02-dem-mo.png: center of cushion content is (511, 610)
+      ctx.drawImage(demImg, -511, -610);
+      ctx.restore();
+
+      // 8.3 The Wooden Fish Mõ (01-mo-go.png) - Compact Nestled Size
+      ctx.save();
+      const moCX = 770;
+      const moCY = 601;
+      ctx.translate(moCX, moCY);
+
+      const moScale = 0.35;
+      ctx.scale((1 + drumCompression * 0.035) * moScale, (1 - drumCompression * 0.055) * moScale);
+
+      // Support visual variations for equipped mõ in shop
+      if (state.equippedMo === 'mo_mun') {
+        ctx.filter = 'brightness(0.55) contrast(1.3) saturate(0.6)';
+      } else if (state.equippedMo === 'mo_hoangdan') {
+        ctx.filter = 'sepia(0.35) saturate(2.0) brightness(1.05) hue-rotate(10deg)';
+      } else if (state.equippedMo === 'mo_ngoc') {
+        ctx.filter = 'hue-rotate(85deg) saturate(1.8) brightness(1.1)';
+      } else if (state.equippedMo === 'mo_kimcuong') {
+        ctx.filter = 'hue-rotate(175deg) brightness(1.35) saturate(1.2)';
+      } else {
+        ctx.filter = 'none';
+      }
+
+      // In 01-mo-go.png: center of mõ content is (507, 541)
+      ctx.drawImage(moImg, -507, -541);
+      ctx.restore();
+
+      // 8.4 The Striker Mallet (03-dui-go.png)
+      drawStrikerMalletAnimated();
+
+    } else {
+      // Procedural vector fallback while sprites load
+      const cx = 800;
+      const cy = 760;
+
+      ctx.fillStyle = 'rgba(25, 12, 18, 0.62)';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + 34, 300, 52, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const cushW = 295;
+      const cushH = 58;
+      const cushGrad = ctx.createRadialGradient(cx, cy - 10, 20, cx, cy + 15, cushW);
+      cushGrad.addColorStop(0, '#d22731');
+      cushGrad.addColorStop(0.65, '#99151c');
+      cushGrad.addColorStop(1, '#4f090d');
+      ctx.fillStyle = cushGrad;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, cushW, cushH, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.save();
+      const moX = cx - 20;
+      const moY = cy - 65;
+      ctx.translate(moX, moY);
+      ctx.scale(1 + drumCompression * 0.02, 1 - drumCompression * 0.04);
+      drawTraditionalMõBody();
+      ctx.restore();
+
+      drawStrikerMalletAnimated();
+    }
+
+    ctx.restore();
+  }
+
+  function drawTraditionalMõBody() {
+    ctx.save();
+    const currentMo = CATALOG.find(i => i.id === state.equippedMo) || CATALOG[0];
+    const woodColor = currentMo.tone || '#c77d3f';
+
+    ctx.beginPath();
+    ctx.moveTo(-195, 25);
+    ctx.bezierCurveTo(-205, -65, -135, -130, -25, -140);
+    ctx.bezierCurveTo(95, -150, 185, -85, 195, 15);
+    ctx.bezierCurveTo(200, 90, 135, 110, 15, 110);
+    ctx.bezierCurveTo(-135, 110, -185, 90, -195, 25);
+    ctx.closePath();
+
+    const bodyGrad = ctx.createRadialGradient(-35, -45, 25, 0, 15, 220);
+    bodyGrad.addColorStop(0, '#f7be78');
+    bodyGrad.addColorStop(0.28, woodColor);
+    bodyGrad.addColorStop(0.72, '#7e401b');
+    bodyGrad.addColorStop(1, '#3f1a09');
+    ctx.fillStyle = bodyGrad;
+    ctx.fill();
+
+    const slitX = 45;
+    const slitY = -5;
+    const slitW = 130;
+    const slitH = 28;
+    ctx.save();
+    ctx.translate(slitX, slitY);
+    ctx.rotate(-0.06);
+    ctx.fillStyle = '#120502';
+    ctx.beginPath();
+    ctx.roundRect(-slitW / 2, -slitH / 2, slitW, slitH, 13);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.restore();
+  }
+
+  // 8.5 The Mallet (03-dui-go.png Animated) - Compact Proportions
+  function drawStrikerMalletAnimated() {
+    ctx.save();
+
+    const pivotX = 1000;
+    const pivotY = 755;
+
+    // Resting rotation: graceful diagonal angle beside the Mõ
+    let rot = 0.12;
+    let transX = 0;
+    let transY = 0;
+
+    if (isSwinging) {
+      if (swingProgress < 0.20) {
+        // Wind-up: pull back and up slightly
+        const t = swingProgress / 0.20;
+        const ease = Math.sin(t * Math.PI * 0.5);
+        rot = 0.12 + ease * 0.10;
+        transX = ease * 12;
+        transY = -ease * 12;
+      } else if (swingProgress < 0.50) {
+        // Downstroke: strike down onto resonance slit/cheek
+        const t = (swingProgress - 0.20) / 0.30;
+        rot = (0.12 + 0.10) - t * 0.62; // moves to -0.40 rad
+        transX = 12 - t * 87; // swings left
+        transY = -12 + t * 7;
+      } else {
+        // Elastic rebound & settle back to rest
+        const t = (swingProgress - 0.50) / 0.50;
+        const decay = Math.exp(-t * 4);
+        const bounce = Math.sin(t * Math.PI * 2.5) * decay;
+        rot = 0.12 + bounce * 0.18;
+        transX = bounce * 12;
+        transY = -bounce * 9;
+      }
+    }
+
+    if (duiLoaded) {
+      // Shadow under mallet
+      ctx.save();
+      ctx.translate(pivotX + transX, pivotY + 10);
+      ctx.scale(1, 0.30);
+      ctx.rotate(rot * 0.4);
+      ctx.fillStyle = 'rgba(25, 12, 10, 0.26)';
+      ctx.beginPath();
+      ctx.ellipse(-45, 0, 75, 16, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Mallet Sprite
+      ctx.translate(pivotX + transX, pivotY + transY);
+      ctx.rotate(rot);
+      const s = 0.30;
+      ctx.scale(s, s);
+      // In 03-dui-go.png, the pivot (handle tip) is at (636, 801)
+      ctx.drawImage(duiImg, -636, -801);
+
+    } else {
+      // Fallback vector mallet
+      ctx.translate(pivotX + transX - 80, pivotY + transY - 180);
+      ctx.rotate(rot + 0.86);
+      const shaftLen = 150;
+      ctx.fillStyle = '#aa5825';
+      ctx.beginPath();
+      ctx.roundRect(10, -6, shaftLen - 10, 12, 6);
+      ctx.fill();
+      ctx.fillStyle = '#cda270';
+      ctx.beginPath();
+      ctx.arc(0, 0, 24, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  // ==========================================
+  // 9. FX: PARTICLES & FLOATING TEXTS
+  // ==========================================
+  function spawnStrikeFX(amount) {
+    const hitX = 825;
+    const hitY = 597;
+
+    shockwave = {
+      x: hitX,
+      y: hitY,
+      radius: 12,
+      maxRadius: 110,
+      life: 1.0,
+      decay: 0.045
+    };
+
+    for (let i = 0; i < 12; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const spd = 2.0 + Math.random() * 3.5;
+      sparks.push({
+        x: hitX,
+        y: hitY,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd - 1.0,
+        life: 1.0,
+        decay: 0.035 + Math.random() * 0.02,
+        size: 2.0 + Math.random() * 2.0,
+        color: Math.random() > 0.3 ? '#ffe27d' : '#ffffff'
+      });
+    }
+
+    floaters.push({
+      x: 770 + (Math.random() - 0.5) * 60,
+      y: 470 + (Math.random() - 0.5) * 20,
+      text: '+' + formatNumber(amount) + ' Công Đức',
+      life: 1.0,
+      isCrit: Math.random() < 0.15
+    });
+  }
+
+  function updateAndDrawFX(dt) {
+    if (shockwave) {
+      shockwave.radius += (shockwave.maxRadius - shockwave.radius) * 0.2;
+      shockwave.life -= shockwave.decay;
+
+      if (shockwave.life > 0) {
+        ctx.save();
+        ctx.globalAlpha = shockwave.life;
+        ctx.strokeStyle = '#ffe596';
+        ctx.lineWidth = 3.5 * shockwave.life;
+        ctx.beginPath();
+        ctx.arc(shockwave.x, shockwave.y, shockwave.radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#f5a638';
+        ctx.lineWidth = 1.8 * shockwave.life;
+        ctx.beginPath();
+        ctx.arc(shockwave.x, shockwave.y, shockwave.radius * 1.25, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        shockwave = null;
+      }
+    }
+
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.x += s.vx;
+      s.y += s.vy;
+      s.vy += 0.15;
+      s.life -= s.decay;
+
+      if (s.life <= 0) {
+        sparks.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = s.life;
+      ctx.fillStyle = s.color;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size * s.life, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    for (let i = floaters.length - 1; i >= 0; i--) {
+      const f = floaters[i];
+      f.y -= 1.6;
+      f.life -= 0.018;
+
+      if (f.life <= 0) {
+        floaters.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, f.life * 1.5);
+      ctx.textAlign = 'center';
+      ctx.font = f.isCrit ? '900 26px "Cinzel", serif' : '800 20px "Plus Jakarta Sans", sans-serif';
+      ctx.shadowColor = f.isCrit ? '#ffbb00' : '#45200c';
+      ctx.shadowBlur = f.isCrit ? 16 : 8;
+      ctx.fillStyle = f.isCrit ? '#fff8b3' : '#ffefc2';
+      ctx.fillText(f.text, f.x, f.y);
+      ctx.restore();
+    }
+
+    for (const p of petals) {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      p.angle += p.spin;
+
+      if (p.x > V_W + 20) p.x = -20;
+      if (p.y > V_H + 20) p.y = -20;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.75;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Background Painting Image Preloader
+  const bgImg = new Image();
+  let bgLoaded = false;
+  bgImg.onload = () => { bgLoaded = true; };
+  bgImg.onerror = () => {
+    if (!bgImg.src.includes('bg-temple_1.jpg')) {
+      bgImg.src = './bg-temple_1.jpg';
+    }
+  };
+  bgImg.src = './bg-temple.png';
+
+  function drawBackground(theme) {
+    if (bgLoaded) {
+      // 1. Draw High-Quality Temple Courtyard Scene
+      ctx.drawImage(bgImg, 0, 0, V_W, V_H);
+
+      // 2. Atmospheric Lighting & Theme Tints
+      if (theme === 'night') {
+        // Deep midnight blue tint
+        ctx.fillStyle = 'rgba(10, 16, 45, 0.52)';
+        ctx.fillRect(0, 0, V_W, V_H);
+
+        // Twinkling stars in sky
+        ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 35; i++) {
+          const sx = (i * 137.5) % V_W;
+          const sy = (i * 61.8) % 300;
+          const tw = Math.sin(timeNow * 0.003 + i) * 0.5 + 0.5;
+          ctx.globalAlpha = 0.2 + tw * 0.8;
+          ctx.fillRect(sx, sy, 1.8, 1.8);
+        }
+        ctx.globalAlpha = 1.0;
+
+        // Glowing Moon
+        const moonGrad = ctx.createRadialGradient(880, 130, 5, 880, 130, 70);
+        moonGrad.addColorStop(0, 'rgba(235, 245, 255, 0.95)');
+        moonGrad.addColorStop(0.3, 'rgba(180, 215, 255, 0.4)');
+        moonGrad.addColorStop(1, 'rgba(180, 215, 255, 0)');
+        ctx.fillStyle = moonGrad;
+        ctx.beginPath();
+        ctx.arc(880, 130, 70, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f0f6ff';
+        ctx.beginPath();
+        ctx.arc(880, 130, 26, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Fireflies in garden
+        for (let f = 0; f < 16; f++) {
+          const fx = 140 + ((f * 97) % 1320);
+          const fy = 540 + Math.sin(timeNow * 0.002 + f * 1.5) * 35;
+          const flGlow = Math.sin(timeNow * 0.004 + f) * 0.5 + 0.5;
+          ctx.fillStyle = `rgba(185, 255, 120, ${0.3 + flGlow * 0.7})`;
+          ctx.beginPath();
+          ctx.arc(fx, fy, 2 + flGlow, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else if (theme === 'day') {
+        // Bright sunny morning tint
+        ctx.fillStyle = 'rgba(255, 245, 215, 0.16)';
+        ctx.fillRect(0, 0, V_W, V_H);
+      }
+
+      // Dynamic animated flickering lantern glow
+      const pulse = Math.sin(timeNow * 0.005) * 0.08;
+      const lanternPositions = [
+        { x: 198, y: 512, r: 68 },  // Left stone lantern
+        { x: 1305, y: 512, r: 68 }, // Right stone lantern
+        { x: 624, y: 340, r: 52 },  // Porch left lantern
+        { x: 976, y: 340, r: 52 }   // Porch right lantern
+      ];
+      for (const lp of lanternPositions) {
+        const rad = lp.r * (1 + pulse);
+        const lGlow = ctx.createRadialGradient(lp.x, lp.y, 4, lp.x, lp.y, rad);
+        lGlow.addColorStop(0, 'rgba(255, 225, 110, 0.45)');
+        lGlow.addColorStop(0.5, 'rgba(255, 160, 40, 0.18)');
+        lGlow.addColorStop(1, 'rgba(255, 140, 20, 0)');
+        ctx.fillStyle = lGlow;
+        ctx.beginPath();
+        ctx.arc(lp.x, lp.y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      // Procedural vector fallback while image loads
+      drawSkyAndMountains(theme);
+      drawCourtyardFloor();
+      drawMainTemple();
+      drawStoneLantern(305, 520);
+      drawStoneLantern(1285, 520);
+      drawBellPavilion(1440, 390);
+      drawCherryBlossomTree();
+      drawLotusPond();
+    }
+  }
+
+  // ==========================================
+  // MAIN RENDER LOOP
+  // ==========================================
+  function render(now) {
+    const dt = Math.min(now - lastTime, 45);
+    lastTime = now;
+    timeNow = now;
+
+    if (isSwinging) {
+      const prevProgress = swingProgress;
+      swingProgress += dt * 0.0055;
+
+      if (prevProgress < 0.50 && swingProgress >= 0.50) {
+        drumCompression = 1.0;
+        playMoSound();
+        spawnStrikeFX(currentPower());
+      }
+
+      if (swingProgress >= 1.0) {
+        swingProgress = 0;
+        isSwinging = false;
+      }
+    }
+
+    drumCompression = Math.max(0, drumCompression - dt * 0.007);
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
+
+    // Layer 1-5: High-Quality Background Painting + Dynamic Lighting & Atmosphere
+    drawBackground(state.theme);
+
+    // Layer 6: Centerpiece - Traditional Mõ Gỗ, Red Cushion & Mallet
+    drawMõAndCushion();
+
+    // Layer 7: Overlays (Petals, Sparks, Floating Numbers)
+    updateAndDrawFX(dt);
+
+    requestAnimationFrame(render);
+  }
+
+  // ==========================================
+  // HIT & GAMEPLAY INPUT
+  // ==========================================
+  function triggerStrike() {
+    const gain = currentPower();
+    state.score += gain;
+    state.hits++;
+
+    isSwinging = true;
+    swingProgress = 0.01;
+
+    refreshUI();
+    save();
+  }
+
+  function isPointerOverMõ(screenX, screenY) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const canvasX = (screenX * dpr - offsetX) / scale;
+    const canvasY = (screenY * dpr - offsetY) / scale;
+    const dx = (canvasX - 770) / 220;
+    const dy = (canvasY - 650) / 180;
+    return dx * dx + dy * dy <= 1.45;
+  }
+
+  cvs.addEventListener('pointerdown', e => {
+    if (isAnyModalOpen()) return;
+    if (isPointerOverMõ(e.clientX, e.clientY)) {
+      triggerStrike();
+    }
+  });
+
+  window.addEventListener('keydown', e => {
+    if (isAnyModalOpen()) {
+      if (e.key === 'Escape') closeAllModals();
+      return;
+    }
+    if (e.code === 'Space') {
+      e.preventDefault();
+      triggerStrike();
+    } else if (e.key === 'Escape') {
+      closeAllModals();
+    }
+  });
+
+  // ==========================================
+  // UI & SHOP CONTROLLERS
+  // ==========================================
+  let currentShopTab = 'mõ';
+
+  function refreshUI() {
+    const realm = getRealm();
+    document.getElementById('realmName').textContent = realm.title;
+    document.getElementById('count').textContent = formatNumber(state.score);
+    document.getElementById('powerDisplay').textContent = '+' + formatNumber(currentPower());
+    document.getElementById('rateDisplay').textContent = '+' + formatNumber(currentRate()) + '/s';
+    document.getElementById('statHits').textContent = 'Tổng gõ: ' + formatNumber(state.hits);
+  }
+
+  function showToast(msg, icon = '✨') {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastIcon').textContent = icon;
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove('on'), 1600);
+  }
+
+  function renderShop() {
+    const container = document.getElementById('shopItems');
+    container.innerHTML = '';
+
+    const items = CATALOG.filter(i => i.cat === currentShopTab);
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'shop-card';
+
+      const isOwned = owned(item.id) > 0;
+      const isEquipped = item.cat === 'mõ' && state.equippedMo === item.id;
+      if (isEquipped) card.classList.add('equipped');
+
+      const iconBox = document.createElement('div');
+      iconBox.className = 'item-icon-box';
+      iconBox.textContent = item.icon;
+
+      const info = document.createElement('div');
+      info.className = 'item-info';
+
+      const title = document.createElement('h4');
+      title.textContent = item.name;
+      if (item.cat === 'trợ' && isOwned) {
+        const lvlTag = document.createElement('span');
+        lvlTag.className = 'item-level-tag';
+        lvlTag.textContent = 'Cấp ' + owned(item.id);
+        title.appendChild(lvlTag);
+      }
+
+      const desc = document.createElement('div');
+      desc.className = 'item-desc';
+      desc.textContent = item.desc;
+
+      const effect = document.createElement('div');
+      effect.className = 'item-effect';
+      if (item.power) effect.textContent = `+${formatNumber(item.power)} công đức mỗi gõ`;
+      if (item.rate) effect.textContent = `+${formatNumber(item.rate)} công đức mỗi giây`;
+
+      info.appendChild(title);
+      info.appendChild(desc);
+      info.appendChild(effect);
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-buy';
+
+      if (item.cat === 'mõ') {
+        if (isEquipped) {
+          btn.textContent = '✓ Đang Dùng';
+          btn.classList.add('equipped-btn');
+          btn.disabled = true;
+        } else if (isOwned) {
+          btn.textContent = 'Trang Bị';
+          btn.onclick = () => {
+            state.equippedMo = item.id;
+            save();
+            refreshUI();
+            renderShop();
+            showToast('Đã trang bị ' + item.name, '🪵');
+          };
+        } else {
+          const cost = getItemPrice(item);
+          btn.textContent = '✦ ' + formatNumber(cost);
+          btn.disabled = state.score < cost;
+          btn.onclick = () => {
+            if (state.score < cost) return;
+            state.score -= cost;
+            state.owned[item.id] = 1;
+            state.equippedMo = item.id;
+            save();
+            refreshUI();
+            renderShop();
+            playBellChime(528, 2.5);
+            showToast('Đã lĩnh ngộ ' + item.name + '!', '🎉');
+          };
+        }
+      } else if (item.cat === 'cảnh') {
+        if (isOwned) {
+          btn.textContent = '✓ Đã Tôn Tạo';
+          btn.disabled = true;
+        } else {
+          const cost = getItemPrice(item);
+          btn.textContent = '✦ ' + formatNumber(cost);
+          btn.disabled = state.score < cost;
+          btn.onclick = () => {
+            if (state.score < cost) return;
+            state.score -= cost;
+            state.owned[item.id] = 1;
+            save();
+            refreshUI();
+            renderShop();
+            playBellChime(432, 2.0);
+            showToast('Đã tôn tạo ' + item.name + '!', '🛕');
+          };
+        }
+      } else {
+        const cost = getItemPrice(item);
+        btn.textContent = '✦ ' + formatNumber(cost);
+        btn.disabled = state.score < cost;
+        btn.onclick = () => {
+          if (state.score < cost) return;
+          state.score -= cost;
+          state.owned[item.id] = (state.owned[item.id] || 0) + 1;
+          save();
+          refreshUI();
+          renderShop();
+          showToast(`Đã nâng cấp ${item.name} lên cấp ${state.owned[item.id]}!`, '📿');
+        };
+      }
+
+      card.appendChild(iconBox);
+      card.appendChild(info);
+      card.appendChild(btn);
+      container.appendChild(card);
+    });
+  }
+
+  // ==========================================
+  // MODALS & BUTTON HOOKS
+  // ==========================================
+  const veil = document.getElementById('veil');
+  const shopDrawer = document.getElementById('shopDrawer');
+  const saveModal = document.getElementById('saveModal');
+  const offlineModal = document.getElementById('offlineModal');
+  const infoModal = document.getElementById('infoModal');
+
+  function isAnyModalOpen() {
+    return shopDrawer.classList.contains('show') ||
+           saveModal.classList.contains('show') ||
+           offlineModal.classList.contains('show') ||
+           infoModal.classList.contains('show');
+  }
+
+  function closeAllModals() {
+    veil.classList.remove('show');
+    shopDrawer.classList.remove('show');
+    saveModal.classList.remove('show');
+    offlineModal.classList.remove('show');
+    infoModal.classList.remove('show');
+  }
+
+  veil.addEventListener('click', closeAllModals);
+
+  document.getElementById('btnOpenShop').onclick = () => {
+    veil.classList.add('show');
+    shopDrawer.classList.add('show');
+    renderShop();
+  };
+  document.getElementById('btnCloseShop').onclick = closeAllModals;
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentShopTab = btn.dataset.tab;
+      renderShop();
+    };
+  });
+
+  const themeOrder = ['dusk', 'night', 'day'];
+  document.getElementById('btnTheme').onclick = () => {
+    const curIdx = themeOrder.indexOf(state.theme);
+    state.theme = themeOrder[(curIdx + 1) % themeOrder.length];
+    save();
+    const names = { dusk: 'Hoàng Hôn 🌇', night: 'Dạ Nguyệt 🌙', day: 'Thanh Thiên ☀️' };
+    showToast('Khung cảnh: ' + names[state.theme], '🎨');
+  };
+
+  const btnSound = document.getElementById('btnSound');
+  const soundIcon = document.getElementById('soundIcon');
+  btnSound.onclick = () => {
+    state.soundEnabled = !state.soundEnabled;
+    soundIcon.textContent = state.soundEnabled ? '🔊' : '🔇';
+    showToast(state.soundEnabled ? 'Đã bật âm thanh' : 'Đã tắt âm thanh', '🎵');
+    save();
+  };
+  soundIcon.textContent = state.soundEnabled ? '🔊' : '🔇';
+
+  const saveInput = document.getElementById('saveCodeInput');
+  document.getElementById('btnSaveMenu').onclick = () => {
+    saveInput.value = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    veil.classList.add('show');
+    saveModal.classList.add('show');
+  };
+  document.getElementById('btnCloseSaveModal').onclick = closeAllModals;
+
+  document.getElementById('btnExportSave').onclick = () => {
+    const code = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    saveInput.value = code;
+    saveInput.select();
+    navigator.clipboard?.writeText(code).then(() => {
+      showToast('Đã sao chép mã lưu trữ!', '📋');
+    }).catch(() => {
+      showToast('Hãy bôi đen và sao chép mã ở ô trên', 'ℹ️');
+    });
+  };
+
+  document.getElementById('btnImportSave').onclick = () => {
+    const code = saveInput.value.trim();
+    if (!code) return;
+    try {
+      const decoded = JSON.parse(decodeURIComponent(escape(atob(code))));
+      if (decoded && typeof decoded === 'object') {
+        state = { ...state, ...decoded };
+        save();
+        refreshUI();
+        closeAllModals();
+        playBellChime(580, 2);
+        showToast('Khôi phục tiến trình thành công!', '🎉');
+      }
+    } catch (err) {
+      alert('Mã lưu không hợp lệ, xin vui lòng kiểm tra lại!');
+    }
+  };
+
+  document.getElementById('btnResetSave').onclick = () => {
+    if (confirm('Bạn có chắc chắn muốn làm lại từ đầu không? Toàn bộ công đức sẽ trở về 0.')) {
+      localStorage.removeItem(SAVE_KEY);
+      location.reload();
+    }
+  };
+
+  document.getElementById('btnInfo').onclick = () => {
+    veil.classList.add('show');
+    infoModal.classList.add('show');
+  };
+  document.getElementById('btnCloseInfo').onclick = closeAllModals;
+
+  function checkOfflineGain() {
+    const now = Date.now();
+    const elapsedSeconds = Math.floor((now - (state.lastTimestamp || now)) / 1000);
+    const r = currentRate();
+
+    if (elapsedSeconds >= 30 && r > 0) {
+      const effectiveSecs = Math.min(elapsedSeconds, 43200);
+      const gain = Math.floor(r * effectiveSecs * 0.75);
+
+      if (gain > 0) {
+        state.score += gain;
+        const mins = Math.floor(effectiveSecs / 60);
+        document.getElementById('offlineDesc').textContent = 
+          `Trong thời gian bạn tĩnh tâm (${mins} phút), đạo tràng đã tự động tích lũy phúc lành:`;
+        document.getElementById('offlineGainText').textContent = '+' + formatNumber(gain) + ' Công Đức';
+        
+        veil.classList.add('show');
+        offlineModal.classList.add('show');
+
+        document.getElementById('btnClaimOffline').onclick = () => {
+          closeAllModals();
+          playBellChime(528, 2.5);
+          refreshUI();
+          save();
+        };
+      }
+    }
+    state.lastTimestamp = now;
+  }
+
+  setInterval(() => {
+    const r = currentRate();
+    if (r > 0) {
+      state.score += r / 5;
+      refreshUI();
+      if (shopDrawer.classList.contains('show')) {
+        renderShop();
+      }
+    }
+  }, 200);
+
+  setInterval(save, 4000);
+
+  refreshUI();
+  checkOfflineGain();
+  requestAnimationFrame(render);
+
 })();
 </script>
 </body>
