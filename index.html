@@ -693,7 +693,7 @@ canvas#game {
     owned: { 'm0': 1 },
     lastTimestamp: Date.now(),
     soundEnabled: true,
-    theme: 'dusk'
+    theme: 'auto'
   };
 
   try {
@@ -708,6 +708,7 @@ canvas#game {
 
   state.owned['m0'] = 1;
   if (!state.equippedMo) state.equippedMo = 'm0';
+  if (!state.theme || state.theme === 'dusk' || state.theme === 'night') state.theme = 'auto';
 
   const save = () => {
     state.lastTimestamp = Date.now();
@@ -1808,81 +1809,150 @@ canvas#game {
   };
   bgImg.src = './bg-temple.png';
 
-  function drawBackground(theme) {
+  // ==========================================
+  // DYNAMIC DAY-NIGHT CYCLE (Tự động luân chuyển ngày đêm)
+  // ==========================================
+  const DAY_NIGHT_CYCLE_MS = 36000; // 36 giây cho 1 vòng 24h đầy đủ (nhanh, sống động)
+
+  function getDayNightFactors() {
+    let phase = 0; // 0..1
+    if (state.theme === 'day') {
+      phase = 0.15; // Cố định ban ngày
+    } else if (state.theme === 'dusk') {
+      phase = 0.42; // Cố định hoàng hôn
+    } else if (state.theme === 'night') {
+      phase = 0.68; // Cố định ban đêm
+    } else {
+      // Chế độ tự động luân chuyển ngày đêm liên tục
+      phase = (timeNow % DAY_NIGHT_CYCLE_MS) / DAY_NIGHT_CYCLE_MS;
+    }
+
+    let dayWeight = 0, duskWeight = 0, nightWeight = 0, dawnWeight = 0;
+
+    if (phase < 0.35) {
+      // 0.00 -> 0.35: Ban ngày trong trẻo, ánh nắng thanh tịnh
+      dayWeight = 1.0;
+    } else if (phase < 0.50) {
+      // 0.35 -> 0.50: Hoàng hôn rực rỡ, chân trời tím cam
+      const t = (phase - 0.35) / 0.15;
+      duskWeight = Math.sin(t * Math.PI);
+      nightWeight = t * t * (3 - 2 * t);
+      dayWeight = Math.max(0, 1 - nightWeight - duskWeight * 0.4);
+    } else if (phase < 0.85) {
+      // 0.50 -> 0.85: Màn đêm tĩnh lặng, vầng trăng thanh, sao trời & đom đóm
+      nightWeight = 1.0;
+    } else {
+      // 0.85 -> 1.00: Rạng đông bình minh, sương mai hé sáng dần
+      const t = (phase - 0.85) / 0.15;
+      dawnWeight = Math.sin(t * Math.PI);
+      nightWeight = 1 - t * t * (3 - 2 * t);
+      dayWeight = Math.max(0, 1 - nightWeight - dawnWeight * 0.4);
+    }
+
+    return { phase, dayWeight, duskWeight, nightWeight, dawnWeight };
+  }
+
+  function drawBackground() {
+    const { phase, dayWeight, duskWeight, nightWeight, dawnWeight } = getDayNightFactors();
+
     if (bgLoaded) {
-      // 1. Draw High-Quality Temple Courtyard Scene
+      // 1. Vẽ cảnh chùa chất lượng cao
       ctx.drawImage(bgImg, 0, 0, V_W, V_H);
 
-      // 2. Atmospheric Lighting & Theme Tints
-      if (theme === 'night') {
-        // Deep midnight blue tint
-        ctx.fillStyle = 'rgba(10, 16, 45, 0.52)';
+      // 2. Ánh nắng ban ngày dịu nhẹ
+      if (dayWeight > 0.01) {
+        ctx.fillStyle = `rgba(255, 246, 215, ${0.14 * dayWeight})`;
+        ctx.fillRect(0, 0, V_W, V_H);
+      }
+
+      // 3. Ánh hoàng hôn rực rỡ chiều tà
+      if (duskWeight > 0.01) {
+        const duskGrad = ctx.createLinearGradient(0, 0, 0, V_H);
+        duskGrad.addColorStop(0, `rgba(255, 85, 25, ${0.40 * duskWeight})`);
+        duskGrad.addColorStop(0.35, `rgba(215, 60, 70, ${0.30 * duskWeight})`);
+        duskGrad.addColorStop(0.70, `rgba(90, 25, 45, ${0.18 * duskWeight})`);
+        duskGrad.addColorStop(1, `rgba(25, 12, 20, ${0.12 * duskWeight})`);
+        ctx.fillStyle = duskGrad;
+        ctx.fillRect(0, 0, V_W, V_H);
+      }
+
+      // 4. Màn đêm huyền diệu
+      if (nightWeight > 0.01) {
+        ctx.fillStyle = `rgba(10, 16, 45, ${0.52 * nightWeight})`;
         ctx.fillRect(0, 0, V_W, V_H);
 
-        // Twinkling stars in sky
+        // Sao trời nhấp nháy
         ctx.fillStyle = '#ffffff';
         for (let i = 0; i < 35; i++) {
           const sx = (i * 137.5) % V_W;
           const sy = (i * 61.8) % 300;
           const tw = Math.sin(timeNow * 0.003 + i) * 0.5 + 0.5;
-          ctx.globalAlpha = 0.2 + tw * 0.8;
+          ctx.globalAlpha = (0.2 + tw * 0.8) * nightWeight;
           ctx.fillRect(sx, sy, 1.8, 1.8);
         }
         ctx.globalAlpha = 1.0;
 
-        // Glowing Moon
+        // Vầng trăng sáng tròn trịa
         const moonGrad = ctx.createRadialGradient(880, 130, 5, 880, 130, 70);
-        moonGrad.addColorStop(0, 'rgba(235, 245, 255, 0.95)');
-        moonGrad.addColorStop(0.3, 'rgba(180, 215, 255, 0.4)');
+        moonGrad.addColorStop(0, `rgba(235, 245, 255, ${0.95 * nightWeight})`);
+        moonGrad.addColorStop(0.3, `rgba(180, 215, 255, ${0.40 * nightWeight})`);
         moonGrad.addColorStop(1, 'rgba(180, 215, 255, 0)');
         ctx.fillStyle = moonGrad;
         ctx.beginPath();
         ctx.arc(880, 130, 70, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#f0f6ff';
+        ctx.fillStyle = `rgba(240, 246, 255, ${nightWeight})`;
         ctx.beginPath();
         ctx.arc(880, 130, 26, 0, Math.PI * 2);
         ctx.fill();
 
-        // Fireflies in garden
+        // Đom đóm lập lòe quanh vườn sen
         for (let f = 0; f < 16; f++) {
           const fx = 140 + ((f * 97) % 1320);
           const fy = 540 + Math.sin(timeNow * 0.002 + f * 1.5) * 35;
           const flGlow = Math.sin(timeNow * 0.004 + f) * 0.5 + 0.5;
-          ctx.fillStyle = `rgba(185, 255, 120, ${0.3 + flGlow * 0.7})`;
+          ctx.fillStyle = `rgba(185, 255, 120, ${(0.3 + flGlow * 0.7) * nightWeight})`;
           ctx.beginPath();
           ctx.arc(fx, fy, 2 + flGlow, 0, Math.PI * 2);
           ctx.fill();
         }
-      } else if (theme === 'day') {
-        // Bright sunny morning tint
-        ctx.fillStyle = 'rgba(255, 245, 215, 0.16)';
+      }
+
+      // 5. Bình minh hé rạng
+      if (dawnWeight > 0.01) {
+        const dawnGrad = ctx.createLinearGradient(0, 0, 0, V_H);
+        dawnGrad.addColorStop(0, `rgba(175, 130, 225, ${0.30 * dawnWeight})`);
+        dawnGrad.addColorStop(0.45, `rgba(255, 175, 120, ${0.28 * dawnWeight})`);
+        dawnGrad.addColorStop(1, `rgba(255, 230, 160, ${0.18 * dawnWeight})`);
+        ctx.fillStyle = dawnGrad;
         ctx.fillRect(0, 0, V_W, V_H);
       }
 
-      // Dynamic animated flickering lantern glow
-      const pulse = Math.sin(timeNow * 0.005) * 0.08;
-      const lanternPositions = [
-        { x: 198, y: 512, r: 68 },  // Left stone lantern
-        { x: 1305, y: 512, r: 68 }, // Right stone lantern
-        { x: 624, y: 340, r: 52 },  // Porch left lantern
-        { x: 976, y: 340, r: 52 }   // Porch right lantern
-      ];
-      for (const lp of lanternPositions) {
-        const rad = lp.r * (1 + pulse);
-        const lGlow = ctx.createRadialGradient(lp.x, lp.y, 4, lp.x, lp.y, rad);
-        lGlow.addColorStop(0, 'rgba(255, 225, 110, 0.45)');
-        lGlow.addColorStop(0.5, 'rgba(255, 160, 40, 0.18)');
-        lGlow.addColorStop(1, 'rgba(255, 140, 20, 0)');
-        ctx.fillStyle = lGlow;
-        ctx.beginPath();
-        ctx.arc(lp.x, lp.y, rad, 0, Math.PI * 2);
-        ctx.fill();
+      // 6. Ánh đèn lồng ấm áp (bừng sáng khi đêm về, dịu đi khi trời sáng)
+      const lanternIntensity = Math.min(1.0, 0.18 + 0.82 * nightWeight + 0.60 * duskWeight);
+      if (lanternIntensity > 0.05) {
+        const pulse = Math.sin(timeNow * 0.005) * 0.08;
+        const lanternPositions = [
+          { x: 198, y: 512, r: 68 },  // Đèn đá sân trái
+          { x: 1305, y: 512, r: 68 }, // Đèn đá sân phải
+          { x: 624, y: 340, r: 52 },  // Lồng đèn chánh điện trái
+          { x: 976, y: 340, r: 52 }   // Lồng đèn chánh điện phải
+        ];
+        for (const lp of lanternPositions) {
+          const rad = lp.r * (1 + pulse);
+          const lGlow = ctx.createRadialGradient(lp.x, lp.y, 4, lp.x, lp.y, rad);
+          lGlow.addColorStop(0, `rgba(255, 225, 110, ${0.45 * lanternIntensity})`);
+          lGlow.addColorStop(0.5, `rgba(255, 160, 40, ${0.20 * lanternIntensity})`);
+          lGlow.addColorStop(1, 'rgba(255, 140, 20, 0)');
+          ctx.fillStyle = lGlow;
+          ctx.beginPath();
+          ctx.arc(lp.x, lp.y, rad, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     } else {
-      // Procedural vector fallback while image loads
-      drawSkyAndMountains(theme);
+      drawSkyAndMountains(nightWeight > 0.5 ? 'night' : (duskWeight > 0.3 ? 'dusk' : 'day'));
       drawCourtyardFloor();
       drawMainTemple();
       drawStoneLantern(305, 520);
@@ -1923,8 +1993,8 @@ canvas#game {
     ctx.clearRect(0, 0, cvs.width, cvs.height);
     ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
 
-    // Layer 1-5: High-Quality Background Painting + Dynamic Lighting & Atmosphere
-    drawBackground(state.theme);
+    // Layer 1-5: High-Quality Background Painting + Dynamic Smooth Day-Night Transition
+    drawBackground();
 
     // Layer 6: Centerpiece - Traditional Mõ Gỗ, Red Cushion & Mallet
     drawMõAndCushion();
@@ -2160,14 +2230,29 @@ canvas#game {
     };
   });
 
-  const themeOrder = ['dusk', 'night', 'day'];
-  document.getElementById('btnTheme').onclick = () => {
+  const themeOrder = ['auto', 'day', 'dusk', 'night'];
+  const themeNames = {
+    auto: 'Tự Động Luân Chuyển 🌗',
+    day: 'Thanh Thiên (Ngày) ☀️',
+    dusk: 'Hoàng Hôn 🌇',
+    night: 'Dạ Nguyệt (Đêm) 🌙'
+  };
+  const themeIcons = { auto: '🌗', day: '☀️', dusk: '🌇', night: '🌙' };
+  const btnTheme = document.getElementById('btnTheme');
+
+  function updateThemeButton() {
+    btnTheme.textContent = themeIcons[state.theme] || '🌗';
+    btnTheme.title = 'Khung Cảnh: ' + (themeNames[state.theme] || 'Tự Động');
+  }
+
+  btnTheme.onclick = () => {
     const curIdx = themeOrder.indexOf(state.theme);
     state.theme = themeOrder[(curIdx + 1) % themeOrder.length];
     save();
-    const names = { dusk: 'Hoàng Hôn 🌇', night: 'Dạ Nguyệt 🌙', day: 'Thanh Thiên ☀️' };
-    showToast('Khung cảnh: ' + names[state.theme], '🎨');
+    updateThemeButton();
+    showToast('Khung cảnh: ' + themeNames[state.theme], '🎨');
   };
+  updateThemeButton();
 
   const btnSound = document.getElementById('btnSound');
   const soundIcon = document.getElementById('soundIcon');
