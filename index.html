@@ -170,6 +170,62 @@ canvas#game {
   filter: brightness(1.15);
 }
 
+/* Top Center Religion Pill Toggle */
+.religion-pill-bar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: auto;
+  display: flex;
+  gap: 6px;
+  background: var(--panel-bg);
+  border: 2px solid var(--gold-border);
+  border-radius: 30px;
+  padding: 4px 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.religion-pill {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #dfceb2;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+}
+
+.religion-pill:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.religion-pill.active {
+  background: linear-gradient(135deg, #a87232, #6a3d16);
+  color: #fff9e6;
+  border-color: #f5d378;
+  box-shadow: 0 3px 12px rgba(245, 211, 120, 0.35);
+}
+
+.religion-btn {
+  font-size: 20px;
+  background: linear-gradient(145deg, #442a5a, #201332);
+  border-color: #ba94e0;
+}
+.religion-btn:hover {
+  border-color: #f0d5ff;
+  box-shadow: 0 6px 18px rgba(186, 148, 224, 0.45);
+}
+
 /* ==================== DRAWERS & MODALS ==================== */
 #veil {
   position: fixed;
@@ -517,6 +573,16 @@ canvas#game {
 
 @media (max-width: 768px) {
   #hud { padding: 12px 14px; }
+  .religion-pill-bar {
+    top: 72px;
+    padding: 3px 4px;
+    gap: 4px;
+  }
+  .religion-pill {
+    font-size: 11px;
+    padding: 6px 10px;
+    gap: 4px;
+  }
   .merit-card { min-width: auto; padding: 10px 14px; }
   .merit-number { font-size: 26px; }
   .merit-rates { font-size: 11px; gap: 8px; }
@@ -527,31 +593,45 @@ canvas#game {
 </head>
 <body>
 
-<canvas id="game" aria-label="Sân Chùa An Nhiên và Mõ Gỗ Tích Công Đức"></canvas>
+<canvas id="game" aria-label="Đạo Tràng Tích Đức và Thánh Đường Cầu Nguyện"></canvas>
 
-<!-- Top Minimalist HUD (Directly matching Reference Image) -->
+<!-- Top Minimalist HUD -->
 <div id="hud">
   <!-- Top Left: Merit Card -->
   <div class="merit-card">
     <div class="merit-realm">
-      <span>🌼</span> <span id="realmName">KHỞI TÂM CẦU ĐẠO</span>
+      <span id="realmIcon">🌼</span> <span id="realmName">KHỞI TÂM CẦU ĐẠO</span>
     </div>
+    <div id="lblScoreTitle" style="font-size: 9.5px; font-weight: 800; color: #d6af69; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px;">ĐIỂM CÔNG ĐỨC</div>
     <div class="merit-value-row">
-      <span class="merit-star">✦</span>
+      <span class="merit-star" id="meritStarIcon">✦</span>
       <span class="merit-number" id="count">0</span>
-      <span class="cloud-motif">☁️</span>
+      <span class="cloud-motif" id="motifIcon">☁️</span>
     </div>
     <div class="merit-rates">
-      <div>Gõ: <strong id="powerDisplay">+1</strong></div>
+      <div><span id="lblPower">Gõ:</span> <strong id="powerDisplay">+1</strong></div>
       <div>Tự động: <strong id="rateDisplay">+0/s</strong></div>
     </div>
   </div>
 
+  <!-- Top Center: Religion Pill Toggle -->
+  <div id="religionToggleBar" class="religion-pill-bar">
+    <button id="pillBuddhist" class="religion-pill active" title="Chùa An Nhiên (Đạo Phật)">
+      <span class="pill-icon">🪷</span>
+      <span class="pill-text">Chùa An Nhiên</span>
+    </button>
+    <button id="pillChristian" class="religion-pill" title="Nhà Thờ Bình An (Đạo Thiên Chúa)">
+      <span class="pill-icon">✝️</span>
+      <span class="pill-text">Nhà Thờ Bình An</span>
+    </button>
+  </div>
+
   <!-- Top Right: Square Icon Buttons Row -->
   <div class="top-actions">
+    <button id="btnSwitchReligion" class="icon-btn religion-btn" title="Chuyển Đạo (Chùa / Nhà Thờ)">✝️</button>
     <button id="btnInfo" class="icon-btn" title="Cài Đặt / Giới Thiệu">🌼</button>
-    <button id="btnOpenShop" class="icon-btn shop-btn" title="Phường Công Đức (Cửa Hàng)">🏪</button>
-    <button id="btnTheme" class="icon-btn" title="Đổi Khung Cảnh (Hoàng Hôn / Dạ Nguyệt / Thanh Thiên)">🌙</button>
+    <button id="btnOpenShop" class="icon-btn shop-btn" title="Phường Công Đức / Ơn Phúc">🏪</button>
+    <button id="btnTheme" class="icon-btn" title="Đổi Khung Cảnh">🌗</button>
     <button id="btnSound" class="icon-btn" title="Bật/Tắt Âm Thanh"><span id="soundIcon">🔊</span></button>
     <button id="btnSaveMenu" class="icon-btn" title="Tiến Trình / Lưu Trữ">💾</button>
   </div>
@@ -564,16 +644,16 @@ canvas#game {
 <aside id="shopDrawer" class="side-drawer">
   <div class="drawer-header">
     <div class="drawer-title-wrap">
-      <span>Chốn Thập Phương</span>
-      <h2>Phường Công Đức</h2>
+      <span id="shopSubTitle">Chốn Thập Phương</span>
+      <h2 id="shopMainTitle">Phường Công Đức</h2>
     </div>
     <button id="btnCloseShop" class="btn-close" aria-label="Đóng cửa hàng">×</button>
   </div>
 
   <div class="tab-nav">
-    <button class="tab-btn active" data-tab="mõ"><span>🪵</span> Mõ Gỗ</button>
-    <button class="tab-btn" data-tab="cảnh"><span>🛕</span> Cảnh Chùa</button>
-    <button class="tab-btn" data-tab="trợ"><span>📿</span> Trợ Duyên</button>
+    <button class="tab-btn active" data-tab="mõ"><span id="tab1Icon">🪵</span> <span id="tab1Name">Mõ Gỗ</span></button>
+    <button class="tab-btn" data-tab="cảnh"><span id="tab2Icon">🛕</span> <span id="tab2Name">Cảnh Chùa</span></button>
+    <button class="tab-btn" data-tab="trợ"><span id="tab3Icon">📿</span> <span id="tab3Name">Trợ Duyên</span></button>
   </div>
 
   <div id="shopItems" class="drawer-content"></div>
@@ -667,6 +747,17 @@ canvas#game {
     { min: 100000000, title: 'ĐẮC ĐẠO VÔ VI', mult: 2.0 },
   ];
 
+  const CHRISTIAN_REALMS = [
+    { min: 0, title: 'KHỞI TÂM TIN KÍNH', mult: 1 },
+    { min: 100, title: 'LẮNG NGHE LỜI CHÚA', mult: 1.05 },
+    { min: 1000, title: 'TÍN THÁC BÌNH AN', mult: 1.1 },
+    { min: 10000, title: 'GIEO HẠT TIN MỪNG', mult: 1.15 },
+    { min: 100000, title: 'TRÀN ĐẦY ÂN SỦNG', mult: 1.25 },
+    { min: 1000000, title: 'HIỆP THÔNG THÁNH THIỆN', mult: 1.4 },
+    { min: 10000000, title: 'ĐỨC TIN KIÊN CỐ', mult: 1.6 },
+    { min: 100000000, title: 'VINH HIỂN THIÊN TRIỀU', mult: 2.0 },
+  ];
+
   const CATALOG = [
     { id: 'm0', cat: 'mõ', name: 'Mõ Gỗ Mộc', icon: '🪵', desc: 'Mõ gỗ gụ mộc mạc, tạo tiếng gõ thanh tịnh.', price: 0, power: 1, tone: '#c77d3f' },
     { id: 'm1', cat: 'mõ', name: 'Mõ Trầm Hương', icon: '🍂', desc: 'Gỗ trầm ngàn năm đượm khói hương thanh khiết.', price: 120, power: 5, tone: '#8a4e27' },
@@ -686,11 +777,40 @@ canvas#game {
     { id: 'holy_light', cat: 'trợ', name: 'Phúc Khí Chiếu Diệu', icon: '☀️', desc: 'Ánh sáng phúc lành bảo bọc muôn loài.', price: 52000, rate: 200, growth: 1.55 }
   ];
 
+  const CHRISTIAN_CATALOG = [
+    // 1. Thánh Vật & Kinh Cầu
+    { id: 'c0', cat: 'mõ', name: 'Kinh Thánh Bìa Nâu', icon: '📖', desc: 'Lời Chúa hằng sống soi sáng lối đi trong đời.', price: 0, power: 1, tone: '#c77d3f' },
+    { id: 'c1', cat: 'mõ', name: 'Tràng Hạt Gỗ Olive', icon: '📿', desc: 'Làm từ cội ô-liu đất thánh Jerusalem bình an.', price: 120, power: 5, tone: '#8a4e27' },
+    { id: 'c2', cat: 'mõ', name: 'Thánh Giá Bạc Thánh Thần', icon: '✝️', desc: 'Thánh giá chạm khắc tinh xảo xua tan bóng tối.', price: 2800, power: 25, tone: '#c0c0c0' },
+    { id: 'c3', cat: 'mõ', name: 'Kinh Thánh Mạ Vàng', icon: '✨', desc: 'Trang kinh nẹp vàng rực rỡ đón nhận ân sủng.', price: 65000, power: 160, tone: '#f5d378' },
+    { id: 'c4', cat: 'mõ', name: 'Tràng Hạt Ngọc Fatima', icon: '💎', desc: 'Hạt ngọc lấp lánh ơn lành vô biên từ Mẹ Maria.', price: 1800000, power: 1000, tone: '#64dfdf' },
+
+    // 2. Thánh Đường
+    { id: 'holy_candles', cat: 'cảnh', name: 'Nến Thánh Bàn Thờ', icon: '🕯️', desc: 'Ngọn nến sáng tỏa ấm áp rực rỡ trước bàn thờ thánh.', price: 280, rate: 3 },
+    { id: 'stained_glass', cat: 'cảnh', name: 'Kính Màu Phục Hưng', icon: '🪟', desc: 'Tranh kính màu huyền ảo đón nhận ánh sáng thiên triều.', price: 1500, rate: 12 },
+    { id: 'church_bells', cat: 'cảnh', name: 'Đại Hồng Chung Nhà Thờ', icon: '🔔', desc: 'Tiếng chuông ngân vang thúc giục tâm hồn hướng thiện.', price: 7200, rate: 40 },
+    { id: 'pipe_organ', cat: 'cảnh', name: 'Đại Phong Cầm Cổ Điển', icon: '🎹', desc: 'Thánh ca trầm bổng xao xuyến nâng hồn lên cõi cao.', price: 42000, rate: 150 },
+    { id: 'altar_statues', cat: 'cảnh', name: 'Tượng Thánh Thể & Mẹ Maria', icon: '🕊️', desc: 'Nơi kính dâng trọn niềm cậy trông và bình an sâu thẳm.', price: 280000, rate: 600 },
+
+    // 3. Ơn Phúc & Khấn Nguyện
+    { id: 'holy_water', cat: 'trợ', name: 'Nước Thánh Thanh Tẩy', icon: '💧', desc: 'Giọt nước mát lành thanh lọc và gìn giữ tâm hồn.', price: 25, rate: 1, growth: 1.38 },
+    { id: 'hymn_book', cat: 'trợ', name: 'Sách Thánh Ca Ca Vịnh', icon: '🎼', desc: 'Khúc ca ngợi khen nuôi dưỡng niềm tin yêu bất diệt.', price: 350, rate: 5, growth: 1.42 },
+    { id: 'communion_bread', cat: 'trợ', name: 'Bánh Thánh Hiệp Thông', icon: '🍞', desc: 'Lương thực thần linh bồi bổ sức mạnh đức tin.', price: 3900, rate: 28, growth: 1.48 },
+    { id: 'holy_spirit_light', cat: 'trợ', name: 'Hào Quang Thánh Linh', icon: '🕊️', desc: 'Bồ câu trắng ban bảy ơn Thánh Thần tràn ngập cõi lòng.', price: 52000, rate: 200, growth: 1.55 }
+  ];
+
   let state = {
+    religion: 'buddhist', // 'buddhist' (Chùa) hoặc 'christian' (Nhà Thờ)
+    // Chùa An Nhiên
     score: 0,
     hits: 0,
     equippedMo: 'm0',
     owned: { 'm0': 1 },
+    // Nhà Thờ Bình An
+    christianScore: 0,
+    christianHits: 0,
+    equippedRelic: 'c0',
+    christianOwned: { 'c0': 1 },
     lastTimestamp: Date.now(),
     soundEnabled: true,
     theme: 'auto'
@@ -708,7 +828,13 @@ canvas#game {
 
   state.owned['m0'] = 1;
   if (!state.equippedMo) state.equippedMo = 'm0';
+  if (!state.christianOwned) state.christianOwned = { 'c0': 1 };
+  state.christianOwned['c0'] = 1;
+  if (!state.equippedRelic) state.equippedRelic = 'c0';
+  if (!state.religion) state.religion = 'buddhist';
   if (!state.theme || state.theme === 'dusk' || state.theme === 'night') state.theme = 'auto';
+
+  const isChristian = () => state.religion === 'christian';
 
   const save = () => {
     state.lastTimestamp = Date.now();
@@ -718,6 +844,7 @@ canvas#game {
   };
 
   const owned = id => state.owned[id] || 0;
+  const christianOwned = id => (state.christianOwned && state.christianOwned[id]) || 0;
   
   const getRealm = () => {
     let current = REALMS[0];
@@ -728,28 +855,55 @@ canvas#game {
     return current;
   };
 
+  const getChristianRealm = () => {
+    let current = CHRISTIAN_REALMS[0];
+    const s = state.christianScore || 0;
+    for (const r of CHRISTIAN_REALMS) {
+      if (s >= r.min) current = r;
+      else break;
+    }
+    return current;
+  };
+
   const currentPower = () => {
     let p = 1;
-    const current = CATALOG.find(i => i.id === state.equippedMo);
-    if (current && current.power) p = current.power;
-    CATALOG.filter(i => i.cat === 'mõ' && i.id !== state.equippedMo && owned(i.id)).forEach(i => {
-      p += Math.floor(i.power * 0.15);
-    });
-    return Math.max(1, Math.floor(p * getRealm().mult));
+    if (isChristian()) {
+      const current = CHRISTIAN_CATALOG.find(i => i.id === state.equippedRelic);
+      if (current && current.power) p = current.power;
+      CHRISTIAN_CATALOG.filter(i => i.cat === 'mõ' && i.id !== state.equippedRelic && christianOwned(i.id)).forEach(i => {
+        p += Math.floor(i.power * 0.15);
+      });
+      return Math.max(1, Math.floor(p * getChristianRealm().mult));
+    } else {
+      const current = CATALOG.find(i => i.id === state.equippedMo);
+      if (current && current.power) p = current.power;
+      CATALOG.filter(i => i.cat === 'mõ' && i.id !== state.equippedMo && owned(i.id)).forEach(i => {
+        p += Math.floor(i.power * 0.15);
+      });
+      return Math.max(1, Math.floor(p * getRealm().mult));
+    }
   };
 
   const currentRate = () => {
     let r = 0;
-    CATALOG.filter(i => i.rate).forEach(i => {
-      r += i.rate * owned(i.id);
-    });
-    return Math.floor(r * getRealm().mult);
+    if (isChristian()) {
+      CHRISTIAN_CATALOG.filter(i => i.rate).forEach(i => {
+        r += i.rate * christianOwned(i.id);
+      });
+      return Math.floor(r * getChristianRealm().mult);
+    } else {
+      CATALOG.filter(i => i.rate).forEach(i => {
+        r += i.rate * owned(i.id);
+      });
+      return Math.floor(r * getRealm().mult);
+    }
   };
 
   const getItemPrice = item => {
+    const isRelic = item.id.startsWith('c') || ['holy_candles', 'stained_glass', 'church_bells', 'pipe_organ', 'altar_statues', 'holy_water', 'hymn_book', 'communion_bread', 'holy_spirit_light'].includes(item.id);
+    const count = isRelic ? christianOwned(item.id) : owned(item.id);
     if (item.cat === 'mõ') return item.price;
     if (item.cat === 'cảnh') return item.price;
-    const count = owned(item.id);
     return Math.ceil(item.price * Math.pow(item.growth || 1.38, count));
   };
 
@@ -814,6 +968,67 @@ canvas#game {
     } catch {}
   }
 
+  // Cathedral Bell & Sacred Pipe Chime for Christian Church
+  function playChurchStrike() {
+    if (!state.soundEnabled) return;
+    try {
+      if (audioContext.state === 'suspended') audioContext.resume();
+      const now = audioContext.currentTime;
+
+      // Harmonic chords for crystal cathedral chime (A4 + E5 + A5)
+      const freqs = [440, 659.25, 880];
+      const masterGain = audioContext.createGain();
+      masterGain.gain.setValueAtTime(0.001, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.22, now + 0.015);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+      masterGain.connect(audioContext.destination);
+
+      freqs.forEach((f, idx) => {
+        const osc = audioContext.createOscillator();
+        osc.type = idx === 0 ? 'sine' : (idx === 1 ? 'triangle' : 'sine');
+        osc.frequency.setValueAtTime(f, now);
+        osc.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + 1.8);
+      });
+    } catch {}
+  }
+
+  function playChurchChime(baseFreq = 587.33, dur = 3.2) {
+    if (!state.soundEnabled) return;
+    try {
+      if (audioContext.state === 'suspended') audioContext.resume();
+      const now = audioContext.currentTime;
+      const osc1 = audioContext.createOscillator();
+      const osc2 = audioContext.createOscillator();
+      const osc3 = audioContext.createOscillator();
+      const g = audioContext.createGain();
+
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(baseFreq, now);
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(baseFreq * 1.5, now);
+      osc3.type = 'sine';
+      osc3.frequency.setValueAtTime(baseFreq * 2.0, now);
+
+      g.gain.setValueAtTime(0.001, now);
+      g.gain.exponentialRampToValueAtTime(0.28, now + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      osc1.connect(g);
+      osc2.connect(g);
+      osc3.connect(g);
+      g.connect(audioContext.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc3.start(now);
+      osc1.stop(now + dur);
+      osc2.stop(now + dur);
+      osc3.stop(now + dur);
+    } catch {}
+  }
+
   // ==========================================
   // CANVAS ENGINE (Full Cover Responsive Scaling)
   // ==========================================
@@ -844,6 +1059,7 @@ canvas#game {
   let swingProgress = 0;
   let isSwinging = false;
   let drumCompression = 0;
+  let prayerCompression = 0; // Hiệu ứng nẩy bàn quỳ / Kinh Thánh khi cầu nguyện
   let shockwave = null;
   let sparks = [];
   let floaters = [];
@@ -1672,7 +1888,7 @@ canvas#game {
   }
 
   // ==========================================
-  // 9. FX: PARTICLES & FLOATING TEXTS
+  // 9. FX: PARTICLES & FLOATING TEXTS (DUAL RELIGION)
   // ==========================================
   function spawnStrikeFX(amount) {
     const hitX = 825;
@@ -1684,7 +1900,8 @@ canvas#game {
       radius: 12,
       maxRadius: 110,
       life: 1.0,
-      decay: 0.045
+      decay: 0.045,
+      isCross: false
     };
 
     for (let i = 0; i < 12; i++) {
@@ -1711,6 +1928,48 @@ canvas#game {
     });
   }
 
+  function spawnChristianStrikeFX(amount) {
+    const hitX = 800;
+    const hitY = 705;
+
+    shockwave = {
+      x: hitX,
+      y: hitY,
+      radius: 16,
+      maxRadius: 140,
+      life: 1.0,
+      decay: 0.04,
+      isCross: true
+    };
+
+    // Radiant holy sparkles (gold + heavenly azure + warm white)
+    const colors = ['#ffe680', '#ffffff', '#7ee5ff', '#ffd452'];
+    for (let i = 0; i < 16; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const spd = 2.2 + Math.random() * 4.2;
+      sparks.push({
+        x: hitX,
+        y: hitY,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd - 1.4,
+        life: 1.0,
+        decay: 0.03 + Math.random() * 0.02,
+        size: 2.5 + Math.random() * 2.5,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+
+    const isCrit = Math.random() < 0.15;
+    const label = isCrit ? `+${formatNumber(amount)} Ơn Toàn Xá! 🕊️` : `+${formatNumber(amount)} Cầu Nguyện ✝️`;
+    floaters.push({
+      x: 800 + (Math.random() - 0.5) * 80,
+      y: 640 + (Math.random() - 0.5) * 20,
+      text: label,
+      life: 1.0,
+      isCrit: isCrit
+    });
+  }
+
   function updateAndDrawFX(dt) {
     if (shockwave) {
       shockwave.radius += (shockwave.maxRadius - shockwave.radius) * 0.2;
@@ -1719,17 +1978,46 @@ canvas#game {
       if (shockwave.life > 0) {
         ctx.save();
         ctx.globalAlpha = shockwave.life;
-        ctx.strokeStyle = '#ffe596';
-        ctx.lineWidth = 3.5 * shockwave.life;
-        ctx.beginPath();
-        ctx.arc(shockwave.x, shockwave.y, shockwave.radius, 0, Math.PI * 2);
-        ctx.stroke();
 
-        ctx.strokeStyle = '#f5a638';
-        ctx.lineWidth = 1.8 * shockwave.life;
-        ctx.beginPath();
-        ctx.arc(shockwave.x, shockwave.y, shockwave.radius * 1.25, 0, Math.PI * 2);
-        ctx.stroke();
+        if (shockwave.isCross) {
+          // Radiant Divine Golden Cross & Ring Shockwave
+          ctx.strokeStyle = '#fff1b0';
+          ctx.lineWidth = 4.0 * shockwave.life;
+          ctx.beginPath();
+          ctx.arc(shockwave.x, shockwave.y, shockwave.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#ffc83b';
+          ctx.lineWidth = 2.0 * shockwave.life;
+          ctx.beginPath();
+          ctx.arc(shockwave.x, shockwave.y, shockwave.radius * 1.3, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Holy Cross Beams
+          const beamLen = shockwave.radius * 1.4;
+          ctx.strokeStyle = `rgba(255, 235, 160, ${shockwave.life * 0.8})`;
+          ctx.lineWidth = 3.5 * shockwave.life;
+          ctx.beginPath();
+          // Vertical beam
+          ctx.moveTo(shockwave.x, shockwave.y - beamLen * 1.2);
+          ctx.lineTo(shockwave.x, shockwave.y + beamLen);
+          // Horizontal beam
+          ctx.moveTo(shockwave.x - beamLen * 0.85, shockwave.y - beamLen * 0.3);
+          ctx.lineTo(shockwave.x + beamLen * 0.85, shockwave.y - beamLen * 0.3);
+          ctx.stroke();
+        } else {
+          ctx.strokeStyle = '#ffe596';
+          ctx.lineWidth = 3.5 * shockwave.life;
+          ctx.beginPath();
+          ctx.arc(shockwave.x, shockwave.y, shockwave.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#f5a638';
+          ctx.lineWidth = 1.8 * shockwave.life;
+          ctx.beginPath();
+          ctx.arc(shockwave.x, shockwave.y, shockwave.radius * 1.25, 0, Math.PI * 2);
+          ctx.stroke();
+        }
         ctx.restore();
       } else {
         shockwave = null;
@@ -1798,7 +2086,7 @@ canvas#game {
     }
   }
 
-  // Background Painting Image Preloader
+  // Background Painting Image Preloader (Temple)
   const bgImg = new Image();
   let bgLoaded = false;
   bgImg.onload = () => { bgLoaded = true; };
@@ -1808,6 +2096,12 @@ canvas#game {
     }
   };
   bgImg.src = './bg-temple.png';
+
+  // Christian Cathedral Image Preloader (Church)
+  const churchImg = new Image();
+  let churchLoaded = false;
+  churchImg.onload = () => { churchLoaded = true; };
+  churchImg.src = './bg-church.jpg';
 
   // ==========================================
   // DYNAMIC DAY-NIGHT CYCLE (Tự động luân chuyển ngày đêm)
@@ -1964,6 +2258,146 @@ canvas#game {
   }
 
   // ==========================================
+  // CATHEDRAL OF PEACE (NHÀ THỜ BÌNH AN) SANCTUARY RENDERER
+  // ==========================================
+  function drawChristianSanctuary() {
+    const { phase, dayWeight, duskWeight, nightWeight, dawnWeight } = getDayNightFactors();
+
+    if (churchLoaded) {
+      // 1. Draw Cathedral Artwork
+      ctx.drawImage(churchImg, 0, 0, V_W, V_H);
+
+      // 2. Daytime Celestial Rays through High Stained Glass
+      if (dayWeight > 0.01) {
+        ctx.save();
+        const rayGrad = ctx.createRadialGradient(800, 100, 20, 800, 480, 520);
+        rayGrad.addColorStop(0, `rgba(255, 250, 220, ${0.28 * dayWeight})`);
+        rayGrad.addColorStop(0.4, `rgba(255, 235, 175, ${0.12 * dayWeight})`);
+        rayGrad.addColorStop(1, 'rgba(255, 235, 175, 0)');
+        ctx.fillStyle = rayGrad;
+        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.restore();
+      }
+
+      // 3. Sunset Warm Stained-Glass Reflection
+      if (duskWeight > 0.01) {
+        ctx.save();
+        const duskGrad = ctx.createLinearGradient(0, 0, 0, V_H);
+        duskGrad.addColorStop(0, `rgba(235, 95, 35, ${0.30 * duskWeight})`);
+        duskGrad.addColorStop(0.4, `rgba(185, 45, 80, ${0.22 * duskWeight})`);
+        duskGrad.addColorStop(1, `rgba(45, 15, 30, ${0.15 * duskWeight})`);
+        ctx.fillStyle = duskGrad;
+        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.restore();
+      }
+
+      // 4. Midnight Sacred Vigil (Candlelit Church Nave)
+      if (nightWeight > 0.01) {
+        ctx.save();
+        ctx.fillStyle = `rgba(12, 16, 42, ${0.54 * nightWeight})`;
+        ctx.fillRect(0, 0, V_W, V_H);
+
+        // Gentle holy starlight through side gothic arches
+        ctx.fillStyle = 'rgba(225, 240, 255, 0.9)';
+        for (let i = 0; i < 20; i++) {
+          const sx = 30 + ((i * 123) % (V_W - 60));
+          const sy = 25 + ((i * 77) % 220);
+          const tw = Math.sin(timeNow * 0.0035 + i) * 0.5 + 0.5;
+          ctx.globalAlpha = (0.2 + tw * 0.8) * nightWeight * 0.7;
+          ctx.fillRect(sx, sy, 1.8, 1.8);
+        }
+        ctx.globalAlpha = 1.0;
+        ctx.restore();
+      }
+
+      // 5. Dawn Celestial Awakening
+      if (dawnWeight > 0.01) {
+        ctx.save();
+        const dawnGrad = ctx.createLinearGradient(0, 0, 0, V_H);
+        dawnGrad.addColorStop(0, `rgba(150, 120, 225, ${0.22 * dawnWeight})`);
+        dawnGrad.addColorStop(0.5, `rgba(255, 190, 130, ${0.20 * dawnWeight})`);
+        dawnGrad.addColorStop(1, 'rgba(255, 240, 180, 0.08)');
+        ctx.fillStyle = dawnGrad;
+        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.restore();
+      }
+
+      // 6. Altar Sacred Candles Glow & Bible Holy Aura
+      const candleIntensity = Math.min(1.0, 0.35 + 0.65 * nightWeight + 0.45 * duskWeight);
+      const flicker = Math.sin(timeNow * 0.012) * 0.08 + Math.cos(timeNow * 0.019) * 0.05;
+      
+      // Altar Candles (Left: 556, 680 | Right: 1044, 680)
+      const candlePositions = [
+        { x: 556, y: 680 },
+        { x: 1044, y: 680 },
+        { x: 432, y: 366 }, // Altar background left candle
+        { x: 566, y: 366 }  // Altar background right candle
+      ];
+      for (const cp of candlePositions) {
+        const rad = 50 * (1 + flicker);
+        const cg = ctx.createRadialGradient(cp.x, cp.y, 3, cp.x, cp.y, rad);
+        cg.addColorStop(0, `rgba(255, 235, 140, ${0.75 * candleIntensity})`);
+        cg.addColorStop(0.4, `rgba(255, 160, 40, ${0.35 * candleIntensity})`);
+        cg.addColorStop(1, 'rgba(255, 140, 20, 0)');
+        ctx.fillStyle = cg;
+        ctx.beginPath();
+        ctx.arc(cp.x, cp.y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Holy Bible Center Interactive Aura & Prayer Desk Rebound
+      ctx.save();
+      const bibleX = 800;
+      const bibleY = 715;
+
+      // Elastic response when praying/clicking
+      const bibleScale = 1 + prayerCompression * 0.04;
+      const bibleAuraAlpha = 0.22 + prayerCompression * 0.5 + Math.sin(timeNow * 0.003) * 0.08;
+
+      const bibleGlow = ctx.createRadialGradient(bibleX, bibleY, 30, bibleX, bibleY, 200 * bibleScale);
+      bibleGlow.addColorStop(0, `rgba(255, 235, 150, ${bibleAuraAlpha})`);
+      bibleGlow.addColorStop(0.5, `rgba(255, 195, 75, ${bibleAuraAlpha * 0.45})`);
+      bibleGlow.addColorStop(1, 'rgba(255, 180, 50, 0)');
+      ctx.fillStyle = bibleGlow;
+      ctx.beginPath();
+      ctx.arc(bibleX, bibleY, 200 * bibleScale, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Subtle prayer ring halo over open Holy Bible
+      ctx.strokeStyle = `rgba(255, 240, 185, ${0.4 + prayerCompression * 0.5})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(bibleX, bibleY + 8, 140 * bibleScale, 45 * bibleScale, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+
+      // Divine Holy Spirit descending beams from Above
+      const holyBeam = ctx.createRadialGradient(800, 60, 15, 800, 420, 380);
+      holyBeam.addColorStop(0, `rgba(255, 255, 255, ${0.28 + Math.sin(timeNow * 0.002) * 0.08})`);
+      holyBeam.addColorStop(0.5, 'rgba(255, 235, 180, 0.12)');
+      holyBeam.addColorStop(1, 'rgba(255, 235, 180, 0)');
+      ctx.fillStyle = holyBeam;
+      ctx.beginPath();
+      ctx.moveTo(740, 50);
+      ctx.lineTo(860, 50);
+      ctx.lineTo(1080, 850);
+      ctx.lineTo(520, 850);
+      ctx.closePath();
+      ctx.fill();
+
+    } else {
+      // Fallback Gothic Cathedral Interior
+      ctx.fillStyle = '#1c1825';
+      ctx.fillRect(0, 0, V_W, V_H);
+      ctx.fillStyle = '#f5dfa2';
+      ctx.font = '700 24px "Cinzel", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Đang tải cảnh Thánh Đường Bình An...', V_W / 2, V_H / 2);
+    }
+  }
+
+  // ==========================================
   // MAIN RENDER LOOP
   // ==========================================
   function render(now) {
@@ -1988,50 +2422,74 @@ canvas#game {
     }
 
     drumCompression = Math.max(0, drumCompression - dt * 0.007);
+    prayerCompression = Math.max(0, prayerCompression - dt * 0.008);
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, cvs.width, cvs.height);
     ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
 
-    // Layer 1-5: High-Quality Background Painting + Dynamic Smooth Day-Night Transition
-    drawBackground();
+    if (isChristian()) {
+      // Chế độ Thánh Đường Thiên Chúa Giáo
+      drawChristianSanctuary();
+    } else {
+      // Chế độ Chùa Phật Giáo
+      drawBackground();
+      drawMõAndCushion();
+    }
 
-    // Layer 6: Centerpiece - Traditional Mõ Gỗ, Red Cushion & Mallet
-    drawMõAndCushion();
-
-    // Layer 7: Overlays (Petals, Sparks, Floating Numbers)
+    // Overlays (Petals, Sparks, Floating Numbers, Divine Shockwaves)
     updateAndDrawFX(dt);
 
     requestAnimationFrame(render);
   }
 
   // ==========================================
-  // HIT & GAMEPLAY INPUT
+  // HIT & GAMEPLAY INPUT (DUAL RELIGION)
   // ==========================================
   function triggerStrike() {
     const gain = currentPower();
-    state.score += gain;
-    state.hits++;
 
-    isSwinging = true;
-    swingProgress = 0.01;
+    if (isChristian()) {
+      // Thánh Đường: Cầu Nguyện & Lần Hạt
+      state.christianScore += gain;
+      state.christianHits = (state.christianHits || 0) + 1;
+      prayerCompression = 1.0;
+
+      playChurchStrike();
+      spawnChristianStrikeFX(gain);
+    } else {
+      // Chùa: Gõ Mõ Tích Đức
+      state.score += gain;
+      state.hits++;
+      isSwinging = true;
+      swingProgress = 0.01;
+    }
 
     refreshUI();
     save();
   }
 
-  function isPointerOverMõ(screenX, screenY) {
+  function isPointerOverHitTarget(screenX, screenY) {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const canvasX = (screenX * dpr - offsetX) / scale;
     const canvasY = (screenY * dpr - offsetY) / scale;
-    const dx = (canvasX - 770) / 220;
-    const dy = (canvasY - 650) / 180;
-    return dx * dx + dy * dy <= 1.45;
+
+    if (isChristian()) {
+      // Hit target: Bàn quỳ nguyện & Kinh Thánh tại trung tâm tiền cảnh (800, 715)
+      const dx = (canvasX - 800) / 290;
+      const dy = (canvasY - 715) / 190;
+      return dx * dx + dy * dy <= 1.45;
+    } else {
+      // Hit target: Mõ Gỗ Chùa (770, 650)
+      const dx = (canvasX - 770) / 220;
+      const dy = (canvasY - 650) / 180;
+      return dx * dx + dy * dy <= 1.45;
+    }
   }
 
   cvs.addEventListener('pointerdown', e => {
     if (isAnyModalOpen()) return;
-    if (isPointerOverMõ(e.clientX, e.clientY)) {
+    if (isPointerOverHitTarget(e.clientX, e.clientY)) {
       triggerStrike();
     }
   });
@@ -2050,17 +2508,101 @@ canvas#game {
   });
 
   // ==========================================
-  // UI & SHOP CONTROLLERS
+  // UI & SHOP CONTROLLERS (DUAL RELIGION)
   // ==========================================
   let currentShopTab = 'mõ';
 
+  function updateReligionUI() {
+    const christian = isChristian();
+    const pillB = document.getElementById('pillBuddhist');
+    const pillC = document.getElementById('pillChristian');
+    const btnSwitch = document.getElementById('btnSwitchReligion');
+
+    const setText = (id, txt) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    };
+
+    if (christian) {
+      if (pillB) pillB.classList.remove('active');
+      if (pillC) pillC.classList.add('active');
+      if (btnSwitch) {
+        btnSwitch.textContent = '🪷';
+        btnSwitch.title = 'Chuyển sang Chùa Phật Giáo';
+      }
+      setText('lblScoreTitle', 'ĐIỂM CẦU NGUYỆN');
+      setText('lblPower', 'Cầu nguyện:');
+      setText('realmIcon', '✝️');
+      setText('meritStarIcon', '🕊️');
+      setText('motifIcon', '📖');
+
+      // Shop Headers & Tabs
+      setText('shopSubTitle', 'Thánh Cung Phúc Lành');
+      setText('shopMainTitle', 'Vật Phẩm Thánh Đường');
+      setText('tab1Icon', '📖');
+      setText('tab1Name', 'Thánh Vật');
+      setText('tab2Icon', '⛪');
+      setText('tab2Name', 'Thánh Đường');
+      setText('tab3Icon', '🕊️');
+      setText('tab3Name', 'Ơn Phúc');
+    } else {
+      if (pillB) pillB.classList.add('active');
+      if (pillC) pillC.classList.remove('active');
+      if (btnSwitch) {
+        btnSwitch.textContent = '✝️';
+        btnSwitch.title = 'Chuyển sang Nhà Thờ Thiên Chúa';
+      }
+      setText('lblScoreTitle', 'ĐIỂM CÔNG ĐỨC');
+      setText('lblPower', 'Gõ:');
+      setText('realmIcon', '🪷');
+      setText('meritStarIcon', '✦');
+      setText('motifIcon', '🪵');
+
+      // Shop Headers & Tabs
+      setText('shopSubTitle', 'Bảo Điện Tích Lũy');
+      setText('shopMainTitle', 'Pháp Khí & Cảnh Chùa');
+      setText('tab1Icon', '🪵');
+      setText('tab1Name', 'Mõ Quý');
+      setText('tab2Icon', '🛕');
+      setText('tab2Name', 'Cảnh Chùa');
+      setText('tab3Icon', '📿');
+      setText('tab3Name', 'Trợ Duyên');
+    }
+  }
+
+  function setReligion(rel) {
+    if (state.religion === rel) return;
+    state.religion = rel;
+    save();
+    updateReligionUI();
+    refreshUI();
+    renderShop();
+
+    if (rel === 'christian') {
+      playChurchChime(587.33, 2.8);
+      showToast('Đã bước vào Thánh Đường Bình An ✝️', '🕊️');
+    } else {
+      playBellChime(528, 2.5);
+      showToast('Đã trở về Chùa An Nhiên 🪷', '🪵');
+    }
+  }
+
   function refreshUI() {
-    const realm = getRealm();
-    document.getElementById('realmName').textContent = realm.title;
-    document.getElementById('count').textContent = formatNumber(state.score);
-    document.getElementById('powerDisplay').textContent = '+' + formatNumber(currentPower());
-    document.getElementById('rateDisplay').textContent = '+' + formatNumber(currentRate()) + '/s';
-    document.getElementById('statHits').textContent = 'Tổng gõ: ' + formatNumber(state.hits);
+    if (isChristian()) {
+      const realm = getChristianRealm();
+      document.getElementById('realmName').textContent = realm.title;
+      document.getElementById('count').textContent = formatNumber(state.christianScore || 0);
+      document.getElementById('powerDisplay').textContent = '+' + formatNumber(currentPower());
+      document.getElementById('rateDisplay').textContent = '+' + formatNumber(currentRate()) + '/s';
+      document.getElementById('statHits').textContent = 'Tổng nguyện: ' + formatNumber(state.christianHits || 0);
+    } else {
+      const realm = getRealm();
+      document.getElementById('realmName').textContent = realm.title;
+      document.getElementById('count').textContent = formatNumber(state.score);
+      document.getElementById('powerDisplay').textContent = '+' + formatNumber(currentPower());
+      document.getElementById('rateDisplay').textContent = '+' + formatNumber(currentRate()) + '/s';
+      document.getElementById('statHits').textContent = 'Tổng gõ: ' + formatNumber(state.hits);
+    }
   }
 
   function showToast(msg, icon = '✨') {
@@ -2076,13 +2618,16 @@ canvas#game {
     const container = document.getElementById('shopItems');
     container.innerHTML = '';
 
-    const items = CATALOG.filter(i => i.cat === currentShopTab);
+    const christian = isChristian();
+    const catalog = christian ? CHRISTIAN_CATALOG : CATALOG;
+    const items = catalog.filter(i => i.cat === currentShopTab);
+
     items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'shop-card';
 
-      const isOwned = owned(item.id) > 0;
-      const isEquipped = item.cat === 'mõ' && state.equippedMo === item.id;
+      const isItemOwned = christian ? (christianOwned(item.id) > 0) : (owned(item.id) > 0);
+      const isEquipped = item.cat === 'mõ' && (christian ? (state.equippedRelic === item.id) : (state.equippedMo === item.id));
       if (isEquipped) card.classList.add('equipped');
 
       const iconBox = document.createElement('div');
@@ -2094,10 +2639,11 @@ canvas#game {
 
       const title = document.createElement('h4');
       title.textContent = item.name;
-      if (item.cat === 'trợ' && isOwned) {
+      const count = christian ? christianOwned(item.id) : owned(item.id);
+      if (item.cat === 'trợ' && count > 0) {
         const lvlTag = document.createElement('span');
         lvlTag.className = 'item-level-tag';
-        lvlTag.textContent = 'Cấp ' + owned(item.id);
+        lvlTag.textContent = 'Cấp ' + count;
         title.appendChild(lvlTag);
       }
 
@@ -2107,8 +2653,9 @@ canvas#game {
 
       const effect = document.createElement('div');
       effect.className = 'item-effect';
-      if (item.power) effect.textContent = `+${formatNumber(item.power)} công đức mỗi gõ`;
-      if (item.rate) effect.textContent = `+${formatNumber(item.rate)} công đức mỗi giây`;
+      const curScoreName = christian ? 'cầu nguyện' : 'công đức';
+      if (item.power) effect.textContent = `+${formatNumber(item.power)} ${curScoreName} mỗi lần`;
+      if (item.rate) effect.textContent = `+${formatNumber(item.rate)} ${curScoreName} mỗi giây`;
 
       info.appendChild(title);
       info.appendChild(desc);
@@ -2116,68 +2663,96 @@ canvas#game {
 
       const btn = document.createElement('button');
       btn.className = 'btn-buy';
+      const currentScore = christian ? (state.christianScore || 0) : state.score;
 
       if (item.cat === 'mõ') {
         if (isEquipped) {
           btn.textContent = '✓ Đang Dùng';
           btn.classList.add('equipped-btn');
           btn.disabled = true;
-        } else if (isOwned) {
+        } else if (isItemOwned) {
           btn.textContent = 'Trang Bị';
           btn.onclick = () => {
-            state.equippedMo = item.id;
+            if (christian) {
+              state.equippedRelic = item.id;
+            } else {
+              state.equippedMo = item.id;
+            }
             save();
             refreshUI();
             renderShop();
-            showToast('Đã trang bị ' + item.name, '🪵');
+            showToast('Đã trang bị ' + item.name, item.icon);
           };
         } else {
           const cost = getItemPrice(item);
-          btn.textContent = '✦ ' + formatNumber(cost);
-          btn.disabled = state.score < cost;
+          btn.textContent = (christian ? '🕊️ ' : '✦ ') + formatNumber(cost);
+          btn.disabled = currentScore < cost;
           btn.onclick = () => {
-            if (state.score < cost) return;
-            state.score -= cost;
-            state.owned[item.id] = 1;
-            state.equippedMo = item.id;
+            if (christian) {
+              if ((state.christianScore || 0) < cost) return;
+              state.christianScore -= cost;
+              state.christianOwned[item.id] = 1;
+              state.equippedRelic = item.id;
+              playChurchChime(659.25, 2.8);
+            } else {
+              if (state.score < cost) return;
+              state.score -= cost;
+              state.owned[item.id] = 1;
+              state.equippedMo = item.id;
+              playBellChime(528, 2.5);
+            }
             save();
             refreshUI();
             renderShop();
-            playBellChime(528, 2.5);
             showToast('Đã lĩnh ngộ ' + item.name + '!', '🎉');
           };
         }
       } else if (item.cat === 'cảnh') {
-        if (isOwned) {
+        if (isItemOwned) {
           btn.textContent = '✓ Đã Tôn Tạo';
           btn.disabled = true;
         } else {
           const cost = getItemPrice(item);
-          btn.textContent = '✦ ' + formatNumber(cost);
-          btn.disabled = state.score < cost;
+          btn.textContent = (christian ? '🕊️ ' : '✦ ') + formatNumber(cost);
+          btn.disabled = currentScore < cost;
           btn.onclick = () => {
-            if (state.score < cost) return;
-            state.score -= cost;
-            state.owned[item.id] = 1;
+            if (christian) {
+              if ((state.christianScore || 0) < cost) return;
+              state.christianScore -= cost;
+              state.christianOwned[item.id] = 1;
+              playChurchChime(523.25, 2.5);
+            } else {
+              if (state.score < cost) return;
+              state.score -= cost;
+              state.owned[item.id] = 1;
+              playBellChime(432, 2.0);
+            }
             save();
             refreshUI();
             renderShop();
-            playBellChime(432, 2.0);
-            showToast('Đã tôn tạo ' + item.name + '!', '🛕');
+            showToast('Đã tôn tạo ' + item.name + '!', christian ? '⛪' : '🛕');
           };
         }
       } else {
         const cost = getItemPrice(item);
-        btn.textContent = '✦ ' + formatNumber(cost);
-        btn.disabled = state.score < cost;
+        btn.textContent = (christian ? '🕊️ ' : '✦ ') + formatNumber(cost);
+        btn.disabled = currentScore < cost;
         btn.onclick = () => {
-          if (state.score < cost) return;
-          state.score -= cost;
-          state.owned[item.id] = (state.owned[item.id] || 0) + 1;
+          if (christian) {
+            if ((state.christianScore || 0) < cost) return;
+            state.christianScore -= cost;
+            state.christianOwned[item.id] = (state.christianOwned[item.id] || 0) + 1;
+            playChurchStrike();
+          } else {
+            if (state.score < cost) return;
+            state.score -= cost;
+            state.owned[item.id] = (state.owned[item.id] || 0) + 1;
+          }
           save();
           refreshUI();
           renderShop();
-          showToast(`Đã nâng cấp ${item.name} lên cấp ${state.owned[item.id]}!`, '📿');
+          const curLvl = christian ? state.christianOwned[item.id] : state.owned[item.id];
+          showToast(`Đã nâng cấp ${item.name} lên cấp ${curLvl}!`, item.icon);
         };
       }
 
@@ -2314,6 +2889,18 @@ canvas#game {
   };
   document.getElementById('btnCloseInfo').onclick = closeAllModals;
 
+  // ==========================================
+  // RELIGION SWITCH CONTROLS & EVENT LISTENERS
+  // ==========================================
+  document.getElementById('pillBuddhist').onclick = () => setReligion('buddhist');
+  document.getElementById('pillChristian').onclick = () => setReligion('christian');
+  const btnSwitchRel = document.getElementById('btnSwitchReligion');
+  if (btnSwitchRel) {
+    btnSwitchRel.onclick = () => {
+      setReligion(isChristian() ? 'buddhist' : 'christian');
+    };
+  }
+
   function checkOfflineGain() {
     const now = Date.now();
     const elapsedSeconds = Math.floor((now - (state.lastTimestamp || now)) / 1000);
@@ -2324,18 +2911,26 @@ canvas#game {
       const gain = Math.floor(r * effectiveSecs * 0.75);
 
       if (gain > 0) {
-        state.score += gain;
+        if (isChristian()) {
+          state.christianScore = (state.christianScore || 0) + gain;
+        } else {
+          state.score += gain;
+        }
+
         const mins = Math.floor(effectiveSecs / 60);
+        const placeName = isChristian() ? 'thánh đường' : 'đạo tràng';
+        const gainLabel = isChristian() ? 'Điểm Cầu Nguyện' : 'Công Đức';
         document.getElementById('offlineDesc').textContent = 
-          `Trong thời gian bạn tĩnh tâm (${mins} phút), đạo tràng đã tự động tích lũy phúc lành:`;
-        document.getElementById('offlineGainText').textContent = '+' + formatNumber(gain) + ' Công Đức';
+          `Trong thời gian bạn tĩnh tâm (${mins} phút), ${placeName} đã tự động tích lũy ơn lành:`;
+        document.getElementById('offlineGainText').textContent = '+' + formatNumber(gain) + ' ' + gainLabel;
         
         veil.classList.add('show');
         offlineModal.classList.add('show');
 
         document.getElementById('btnClaimOffline').onclick = () => {
           closeAllModals();
-          playBellChime(528, 2.5);
+          if (isChristian()) playChurchChime(587.33, 2.5);
+          else playBellChime(528, 2.5);
           refreshUI();
           save();
         };
@@ -2344,10 +2939,15 @@ canvas#game {
     state.lastTimestamp = now;
   }
 
+  // Tự động nhận phúc lành theo thời gian thực (Real-time Passive Rate)
   setInterval(() => {
     const r = currentRate();
     if (r > 0) {
-      state.score += r / 5;
+      if (isChristian()) {
+        state.christianScore = (state.christianScore || 0) + r / 5;
+      } else {
+        state.score += r / 5;
+      }
       refreshUI();
       if (shopDrawer.classList.contains('show')) {
         renderShop();
@@ -2357,6 +2957,7 @@ canvas#game {
 
   setInterval(save, 4000);
 
+  updateReligionUI();
   refreshUI();
   checkOfflineGain();
   requestAnimationFrame(render);
