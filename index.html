@@ -50,9 +50,16 @@ canvas#game {
   pointer-events: none;
   z-index: 5;
   display: flex;
+  flex-direction: column;
+  padding: 16px 22px;
+  gap: 10px;
+}
+
+.hud-top-row {
+  display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 16px 22px;
+  width: 100%;
 }
 
 /* Top Left Merit Badge */
@@ -572,22 +579,99 @@ canvas#game {
 }
 
 @media (max-width: 768px) {
-  #hud { padding: 12px 14px; }
+  #hud {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .hud-top-row {
+    align-items: center;
+    gap: 8px;
+  }
   .religion-pill-bar {
-    top: 72px;
-    padding: 3px 4px;
-    gap: 4px;
+    position: static;
+    transform: none;
+    margin: 2px auto 0;
+    width: fit-content;
+    padding: 3px 6px;
+    gap: 5px;
   }
   .religion-pill {
     font-size: 11px;
-    padding: 6px 10px;
-    gap: 4px;
+    padding: 5px 12px;
+    gap: 5px;
   }
-  .merit-card { min-width: auto; padding: 10px 14px; }
-  .merit-number { font-size: 26px; }
-  .merit-rates { font-size: 11px; gap: 8px; }
-  .icon-btn { width: 38px; height: 38px; font-size: 16px; border-radius: 11px; }
-  .top-actions { gap: 6px; }
+  .merit-card {
+    min-width: 130px;
+    max-width: 168px;
+    padding: 7px 10px;
+    border-radius: 13px;
+    gap: 2px;
+  }
+  .merit-realm {
+    font-size: 9px;
+    letter-spacing: 0.8px;
+  }
+  #lblScoreTitle {
+    font-size: 8px !important;
+  }
+  .merit-star {
+    font-size: 16px;
+  }
+  .merit-number {
+    font-size: clamp(19px, 5.2vw, 24px);
+  }
+  .cloud-motif {
+    font-size: 13px;
+  }
+  .merit-rates {
+    font-size: 9px;
+    gap: 5px;
+  }
+  .top-actions {
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .icon-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+  /* Ẩn nút đổi đạo phụ trong hàng nút (vì thanh pill bar đã ở ngay trung tâm) */
+  #btnSwitchReligion {
+    display: none;
+  }
+  /* Nổi bật nút cửa hàng để người chơi chạm dễ dàng */
+  .icon-btn.shop-btn {
+    background: linear-gradient(145deg, #8a551e, #4f2a08);
+    border-color: #ffd466;
+    box-shadow: 0 0 12px rgba(255, 212, 102, 0.45);
+  }
+
+  /* Cửa hàng dạng Bottom Sheet hiện đại trên điện thoại */
+  .side-drawer {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 82vh !important;
+    max-height: 85vh !important;
+    top: auto !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    border-left: none !important;
+    border-top: 2px solid var(--gold-border) !important;
+    border-radius: 22px 22px 0 0 !important;
+    transform: translateY(100%) !important;
+  }
+  .side-drawer.show {
+    transform: translateY(0) !important;
+  }
+  .modal-dialog {
+    width: calc(100vw - 28px) !important;
+    max-width: 390px !important;
+    padding: 18px 14px !important;
+    border-radius: 18px !important;
+  }
 }
 </style>
 </head>
@@ -597,24 +681,36 @@ canvas#game {
 
 <!-- Top Minimalist HUD -->
 <div id="hud">
-  <!-- Top Left: Merit Card -->
-  <div class="merit-card">
-    <div class="merit-realm">
-      <span id="realmIcon">🌼</span> <span id="realmName">KHỞI TÂM CẦU ĐẠO</span>
+  <div class="hud-top-row">
+    <!-- Top Left: Merit Card -->
+    <div class="merit-card">
+      <div class="merit-realm">
+        <span id="realmIcon">🌼</span> <span id="realmName">KHỞI TÂM CẦU ĐẠO</span>
+      </div>
+      <div id="lblScoreTitle" style="font-size: 9.5px; font-weight: 800; color: #d6af69; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px;">ĐIỂM CÔNG ĐỨC</div>
+      <div class="merit-value-row">
+        <span class="merit-star" id="meritStarIcon">✦</span>
+        <span class="merit-number" id="count">0</span>
+        <span class="cloud-motif" id="motifIcon">☁️</span>
+      </div>
+      <div class="merit-rates">
+        <div><span id="lblPower">Gõ:</span> <strong id="powerDisplay">+1</strong></div>
+        <div>Tự động: <strong id="rateDisplay">+0/s</strong></div>
+      </div>
     </div>
-    <div id="lblScoreTitle" style="font-size: 9.5px; font-weight: 800; color: #d6af69; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px;">ĐIỂM CÔNG ĐỨC</div>
-    <div class="merit-value-row">
-      <span class="merit-star" id="meritStarIcon">✦</span>
-      <span class="merit-number" id="count">0</span>
-      <span class="cloud-motif" id="motifIcon">☁️</span>
-    </div>
-    <div class="merit-rates">
-      <div><span id="lblPower">Gõ:</span> <strong id="powerDisplay">+1</strong></div>
-      <div>Tự động: <strong id="rateDisplay">+0/s</strong></div>
+
+    <!-- Top Right: Square Icon Buttons Row -->
+    <div class="top-actions">
+      <button id="btnSwitchReligion" class="icon-btn religion-btn" title="Chuyển Đạo (Chùa / Nhà Thờ)">✝️</button>
+      <button id="btnOpenShop" class="icon-btn shop-btn" title="Phường Công Đức / Ơn Phúc">🏪</button>
+      <button id="btnTheme" class="icon-btn" title="Đổi Khung Cảnh">🌗</button>
+      <button id="btnSound" class="icon-btn" title="Bật/Tắt Âm Thanh"><span id="soundIcon">🔊</span></button>
+      <button id="btnSaveMenu" class="icon-btn" title="Tiến Trình / Lưu Trữ">💾</button>
+      <button id="btnInfo" class="icon-btn" title="Cài Đặt / Giới Thiệu">🌼</button>
     </div>
   </div>
 
-  <!-- Top Center: Religion Pill Toggle -->
+  <!-- Top Center / Tier 2: Religion Pill Toggle -->
   <div id="religionToggleBar" class="religion-pill-bar">
     <button id="pillBuddhist" class="religion-pill active" title="Chùa An Nhiên (Đạo Phật)">
       <span class="pill-icon">🪷</span>
@@ -624,16 +720,6 @@ canvas#game {
       <span class="pill-icon">✝️</span>
       <span class="pill-text">Nhà Thờ Bình An</span>
     </button>
-  </div>
-
-  <!-- Top Right: Square Icon Buttons Row -->
-  <div class="top-actions">
-    <button id="btnSwitchReligion" class="icon-btn religion-btn" title="Chuyển Đạo (Chùa / Nhà Thờ)">✝️</button>
-    <button id="btnInfo" class="icon-btn" title="Cài Đặt / Giới Thiệu">🌼</button>
-    <button id="btnOpenShop" class="icon-btn shop-btn" title="Phường Công Đức / Ơn Phúc">🏪</button>
-    <button id="btnTheme" class="icon-btn" title="Đổi Khung Cảnh">🌗</button>
-    <button id="btnSound" class="icon-btn" title="Bật/Tắt Âm Thanh"><span id="soundIcon">🔊</span></button>
-    <button id="btnSaveMenu" class="icon-btn" title="Tiến Trình / Lưu Trữ">💾</button>
   </div>
 </div>
 
@@ -1046,9 +1132,32 @@ canvas#game {
     cvs.width = window.innerWidth * dpr;
     cvs.height = window.innerHeight * dpr;
 
-    scale = Math.max(cvs.width / V_W, cvs.height / V_H);
-    offsetX = (cvs.width - V_W * scale) / 2;
-    offsetY = (cvs.height - V_H * scale) / 2;
+    const isPortrait = cvs.height > cvs.width;
+    if (isPortrait) {
+      // Mobile Portrait Mode (Điện thoại dọc):
+      // Thay vì phóng to cực đoan 3.85x khiến ảnh bị crop mất 74% và đồ vật khổng lồ,
+      // ta căn chỉnh chiều rộng nhìn thấy khoảng 750px - 850px (tỷ lệ chuẩn game casual).
+      // Bàn quỳ Kinh Thánh hoặc Mõ gỗ sẽ chiếm ~70-75% bề ngang màn hình, vừa vặn tuyệt đẹp.
+      const targetSceneW = Math.min(880, Math.max(720, (cvs.width / dpr) * 1.95));
+      scale = cvs.width / targetSceneW;
+      offsetX = (cvs.width - V_W * scale) / 2;
+
+      // Đặt tâm điểm gõ/nguyện (Mõ hoặc Kinh Thánh ở y ~ 720)
+      // ngay tại vùng chạm ngón tay cái thuận tiện nhất (~64% chiều cao màn hình)
+      const centerTargetY = 720;
+      const desiredScreenY = cvs.height * 0.64;
+      offsetY = desiredScreenY - centerTargetY * scale;
+
+      // Giới hạn offsetY để nóc chùa và vòm thánh đường không bị đẩy xuống quá sâu
+      const maxOffsetY = cvs.height * 0.16;
+      const minOffsetY = cvs.height - V_H * scale - 140 * scale;
+      offsetY = Math.min(maxOffsetY, Math.max(minOffsetY, offsetY));
+    } else {
+      // Desktop / Tablet Landscape Mode (Màn hình ngang):
+      scale = Math.max(cvs.width / V_W, cvs.height / V_H);
+      offsetX = (cvs.width - V_W * scale) / 2;
+      offsetY = (cvs.height - V_H * scale) / 2;
+    }
   }
   window.addEventListener('resize', handleResize);
   handleResize();
@@ -2148,32 +2257,44 @@ canvas#game {
 
   function drawBackground() {
     const { phase, dayWeight, duskWeight, nightWeight, dawnWeight } = getDayNightFactors();
+    const minX = -offsetX / scale - 60;
+    const maxX = (cvs.width - offsetX) / scale + 60;
+    const minY = -offsetY / scale - 60;
+    const maxY = (cvs.height - offsetY) / scale + 60;
 
     if (bgLoaded) {
+      // Mở rộng bầu trời và sân đá liền mạch trên màn hình dọc
+      if (minY < 0) {
+        drawSkyAndMountains(nightWeight > 0.5 ? 'night' : (duskWeight > 0.3 ? 'dusk' : 'day'));
+      }
+      if (maxY > 900) {
+        drawCourtyardFloor();
+      }
+
       // 1. Vẽ cảnh chùa chất lượng cao
       ctx.drawImage(bgImg, 0, 0, V_W, V_H);
 
       // 2. Ánh nắng ban ngày dịu nhẹ
       if (dayWeight > 0.01) {
         ctx.fillStyle = `rgba(255, 246, 215, ${0.14 * dayWeight})`;
-        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.fillRect(minX, minY, maxX - minX, maxY - minY);
       }
 
       // 3. Ánh hoàng hôn rực rỡ chiều tà
       if (duskWeight > 0.01) {
-        const duskGrad = ctx.createLinearGradient(0, 0, 0, V_H);
+        const duskGrad = ctx.createLinearGradient(0, minY, 0, maxY);
         duskGrad.addColorStop(0, `rgba(255, 85, 25, ${0.40 * duskWeight})`);
         duskGrad.addColorStop(0.35, `rgba(215, 60, 70, ${0.30 * duskWeight})`);
         duskGrad.addColorStop(0.70, `rgba(90, 25, 45, ${0.18 * duskWeight})`);
         duskGrad.addColorStop(1, `rgba(25, 12, 20, ${0.12 * duskWeight})`);
         ctx.fillStyle = duskGrad;
-        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.fillRect(minX, minY, maxX - minX, maxY - minY);
       }
 
       // 4. Màn đêm huyền diệu
       if (nightWeight > 0.01) {
         ctx.fillStyle = `rgba(10, 16, 45, ${0.52 * nightWeight})`;
-        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.fillRect(minX, minY, maxX - minX, maxY - minY);
 
         // Sao trời nhấp nháy
         ctx.fillStyle = '#ffffff';
@@ -2262,12 +2383,85 @@ canvas#game {
   // ==========================================
   function drawChristianSanctuary() {
     const { phase, dayWeight, duskWeight, nightWeight, dawnWeight } = getDayNightFactors();
+    const minX = -offsetX / scale - 60;
+    const maxX = (cvs.width - offsetX) / scale + 60;
+    const minY = -offsetY / scale - 60;
+    const maxY = (cvs.height - offsetY) / scale + 60;
 
     if (churchLoaded) {
-      // 1. Draw Cathedral Artwork
+      // 0. Mở rộng vòm thánh đường và sàn đá cẩm thạch cho màn hình điện thoại
+      if (minY < 0) {
+        const ceilGrad = ctx.createLinearGradient(0, minY, 0, 140);
+        ceilGrad.addColorStop(0, nightWeight > 0.4 ? '#0b0e22' : '#231b2f');
+        ceilGrad.addColorStop(0.6, nightWeight > 0.4 ? '#181e3a' : '#453558');
+        ceilGrad.addColorStop(1, nightWeight > 0.4 ? '#1c2242' : '#654c6e');
+        ctx.fillStyle = ceilGrad;
+        ctx.fillRect(minX, minY, maxX - minX, 140 - minY);
+      }
+      if (maxY > 900) {
+        // Polished marble tiles background matching church floor
+        const floorGrad = ctx.createLinearGradient(0, 850, 0, maxY);
+        floorGrad.addColorStop(0, '#d1aa78');
+        floorGrad.addColorStop(0.35, '#b88956');
+        floorGrad.addColorStop(0.75, '#7c532e');
+        floorGrad.addColorStop(1, '#3d2411');
+        ctx.fillStyle = floorGrad;
+        ctx.fillRect(minX, 850, maxX - minX, maxY - 850);
+
+        // Tile perspective lines
+        ctx.strokeStyle = 'rgba(255, 235, 190, 0.25)';
+        ctx.lineWidth = 2.0;
+        const tileLines = [150, 320, 480, 1120, 1280, 1450];
+        for (const tx of tileLines) {
+          ctx.beginPath();
+          ctx.moveTo(tx, 850);
+          ctx.lineTo(tx + (tx - 800) * 0.45, maxY);
+          ctx.stroke();
+        }
+
+        // Horizontal tile seams
+        for (let ty = 915; ty < maxY; ty += 60) {
+          ctx.beginPath();
+          ctx.moveTo(minX, ty);
+          ctx.lineTo(maxX, ty);
+          ctx.stroke();
+        }
+
+        // Thảm đỏ lối đi trung tâm
+        ctx.fillStyle = '#9c1c2e';
+        ctx.beginPath();
+        ctx.moveTo(630, 850);
+        ctx.lineTo(970, 850);
+        ctx.lineTo(1045, maxY);
+        ctx.lineTo(555, maxY);
+        ctx.closePath();
+        ctx.fill();
+
+        // Inner velvet runner
+        ctx.fillStyle = '#b6263b';
+        ctx.beginPath();
+        ctx.moveTo(645, 850);
+        ctx.lineTo(955, 850);
+        ctx.lineTo(1025, maxY);
+        ctx.lineTo(575, maxY);
+        ctx.closePath();
+        ctx.fill();
+
+        // Viền thảm hoàng kim
+        ctx.strokeStyle = '#f0c058';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(630, 850);
+        ctx.lineTo(555, maxY);
+        ctx.moveTo(970, 850);
+        ctx.lineTo(1045, maxY);
+        ctx.stroke();
+      }
+
+      // 1. Vẽ khung cảnh Thánh Đường
       ctx.drawImage(churchImg, 0, 0, V_W, V_H);
 
-      // 2. Daytime Celestial Rays through High Stained Glass
+      // 2. Ánh sáng thiên đàng ban ngày qua kính ghép màu
       if (dayWeight > 0.01) {
         ctx.save();
         const rayGrad = ctx.createRadialGradient(800, 100, 20, 800, 480, 520);
@@ -2275,27 +2469,27 @@ canvas#game {
         rayGrad.addColorStop(0.4, `rgba(255, 235, 175, ${0.12 * dayWeight})`);
         rayGrad.addColorStop(1, 'rgba(255, 235, 175, 0)');
         ctx.fillStyle = rayGrad;
-        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.fillRect(minX, minY, maxX - minX, maxY - minY);
         ctx.restore();
       }
 
-      // 3. Sunset Warm Stained-Glass Reflection
+      // 3. Sắc hoàng hôn rực rỡ
       if (duskWeight > 0.01) {
         ctx.save();
-        const duskGrad = ctx.createLinearGradient(0, 0, 0, V_H);
+        const duskGrad = ctx.createLinearGradient(0, minY, 0, maxY);
         duskGrad.addColorStop(0, `rgba(235, 95, 35, ${0.30 * duskWeight})`);
         duskGrad.addColorStop(0.4, `rgba(185, 45, 80, ${0.22 * duskWeight})`);
         duskGrad.addColorStop(1, `rgba(45, 15, 30, ${0.15 * duskWeight})`);
         ctx.fillStyle = duskGrad;
-        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.fillRect(minX, minY, maxX - minX, maxY - minY);
         ctx.restore();
       }
 
-      // 4. Midnight Sacred Vigil (Candlelit Church Nave)
+      // 4. Dạ cảnh thiêng liêng
       if (nightWeight > 0.01) {
         ctx.save();
         ctx.fillStyle = `rgba(12, 16, 42, ${0.54 * nightWeight})`;
-        ctx.fillRect(0, 0, V_W, V_H);
+        ctx.fillRect(minX, minY, maxX - minX, maxY - minY);
 
         // Gentle holy starlight through side gothic arches
         ctx.fillStyle = 'rgba(225, 240, 255, 0.9)';
@@ -2323,25 +2517,49 @@ canvas#game {
       }
 
       // 6. Altar Sacred Candles Glow & Bible Holy Aura
-      const candleIntensity = Math.min(1.0, 0.35 + 0.65 * nightWeight + 0.45 * duskWeight);
-      const flicker = Math.sin(timeNow * 0.012) * 0.08 + Math.cos(timeNow * 0.019) * 0.05;
+      const candleIntensity = Math.min(1.0, 0.40 + 0.60 * nightWeight + 0.45 * duskWeight);
       
-      // Altar Candles (Left: 556, 680 | Right: 1044, 680)
+      // Exact Candle Flame Tips detected from Cathedral Art (1600x900 canvas space)
       const candlePositions = [
-        { x: 556, y: 680 },
-        { x: 1044, y: 680 },
-        { x: 432, y: 366 }, // Altar background left candle
-        { x: 566, y: 366 }  // Altar background right candle
+        // Tiền cảnh: 2 ngọn nến lớn bên cạnh bàn quỳ và Kinh Thánh
+        { x: 560, y: 571, r: 64, inner: 4.5, weight: 1.0 },
+        { x: 1045, y: 571, r: 64, inner: 4.5, weight: 1.0 },
+
+        // Trung tâm: 2 ngọn nến trên bàn thờ trước Thánh Giá
+        { x: 692, y: 323, r: 36, inner: 3.0, weight: 0.85 },
+        { x: 907, y: 323, r: 36, inner: 3.0, weight: 0.85 },
+
+        // Trụ cột vòm: Chân đèn treo tường (Wall Sconces)
+        { x: 447, y: 361, r: 32, inner: 2.5, weight: 0.75 },
+        { x: 1152, y: 361, r: 32, inner: 2.5, weight: 0.75 },
+        { x: 292, y: 331, r: 28, inner: 2.2, weight: 0.65 },
+        { x: 1307, y: 331, r: 28, inner: 2.2, weight: 0.65 }
       ];
+
       for (const cp of candlePositions) {
-        const rad = 50 * (1 + flicker);
-        const cg = ctx.createRadialGradient(cp.x, cp.y, 3, cp.x, cp.y, rad);
-        cg.addColorStop(0, `rgba(255, 235, 140, ${0.75 * candleIntensity})`);
-        cg.addColorStop(0.4, `rgba(255, 160, 40, ${0.35 * candleIntensity})`);
-        cg.addColorStop(1, 'rgba(255, 140, 20, 0)');
+        const flicker = Math.sin(timeNow * 0.013 + cp.x * 0.05) * 0.07 + Math.cos(timeNow * 0.019 + cp.y * 0.05) * 0.05;
+        const rad = cp.r * (1 + flicker);
+        const intensity = candleIntensity * (cp.weight || 1.0);
+
+        // Soft outer ambient warmth
+        const cg = ctx.createRadialGradient(cp.x, cp.y, cp.inner, cp.x, cp.y, rad);
+        cg.addColorStop(0, `rgba(255, 245, 185, ${0.85 * intensity})`);
+        cg.addColorStop(0.3, `rgba(255, 195, 65, ${0.45 * intensity})`);
+        cg.addColorStop(0.65, `rgba(255, 135, 25, ${0.18 * intensity})`);
+        cg.addColorStop(1, 'rgba(255, 110, 15, 0)');
         ctx.fillStyle = cg;
         ctx.beginPath();
         ctx.arc(cp.x, cp.y, rad, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hot inner flame core
+        const coreGrad = ctx.createRadialGradient(cp.x, cp.y, 0.5, cp.x, cp.y, cp.inner * 1.8);
+        coreGrad.addColorStop(0, `rgba(255, 255, 240, ${0.95 * intensity})`);
+        coreGrad.addColorStop(0.5, `rgba(255, 235, 130, ${0.70 * intensity})`);
+        coreGrad.addColorStop(1, 'rgba(255, 190, 50, 0)');
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(cp.x, cp.y, cp.inner * 1.8, 0, Math.PI * 2);
         ctx.fill();
       }
 
